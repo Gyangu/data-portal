@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "UniversalTransport",
+    name: "DataPortal",
     platforms: [
         .macOS(.v12),
         .iOS(.v15),
@@ -12,8 +12,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "UniversalTransport",
-            targets: ["UniversalTransport"]),
+            name: "DataPortal",
+            targets: ["DataPortal"]),
         .executable(
             name: "TestRunner",
             targets: ["TestRunner"]),
@@ -24,13 +24,13 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         .target(
-            name: "UniversalTransport",
+            name: "DataPortal",
             dependencies: []),
         .executableTarget(
             name: "TestRunner",
-            dependencies: ["UniversalTransport"]),
+            dependencies: ["DataPortal"]),
         .testTarget(
-            name: "UniversalTransportTests",
-            dependencies: ["UniversalTransport"]),
+            name: "DataPortalTests",
+            dependencies: ["DataPortal"]),
     ]
 )

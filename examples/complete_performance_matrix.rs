@@ -8,7 +8,7 @@ use std::sync::Arc;
 use tokio::sync::{mpsc, Barrier};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use universal_transport::{UtpHeader, SharedMemoryTransport};
+use data_portal::{PortalHeader, SharedMemoryTransport};
 use anyhow::Result;
 
 #[derive(Debug, Clone)]
@@ -226,7 +226,7 @@ async fn simulate_rust_swift_tcp(block_size: usize) -> Result<(f64, f64, f64)> {
 
 /// 生成完整的性能矩阵表格
 fn print_performance_matrix(all_results: &[PerformanceResult]) {
-    println!("\n📊 Universal Transport Protocol 完整性能矩阵");
+    println!("\n📊 Data Portal 完整性能矩阵");
     println!("====================================================================================================");
     println!("| 通信组合           | 传输模式   | 数据块大小 | 吞吐量      | 延迟      | 操作频率        |");
     println!("|--------------------|-----------|----------|-----------|----------|----------------|");
@@ -293,7 +293,7 @@ fn generate_analysis_report(all_results: &[PerformanceResult]) {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("🎯 Universal Transport Protocol 完整性能矩阵测试");
+    println!("🎯 Data Portal 完整性能矩阵测试");
     println!("=====================================================");
     println!("测试6组跨语言通信在不同数据块大小下的性能表现");
     println!();

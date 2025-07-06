@@ -8,7 +8,7 @@ use std::slice;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 use std::ffi::CString;
-use universal_transport::SharedMemoryTransport;
+use data_portal::SharedMemoryTransport;
 use anyhow::Result;
 
 /// 高性能零拷贝测试
@@ -253,7 +253,7 @@ async fn test_concurrent_zero_copy() -> Result<()> {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("🎯 Universal Transport Protocol GB级性能测试");
+    println!("🎯 Data Portal GB级性能测试");
     println!("============================================");
     println!("目标: 验证POSIX共享内存零拷贝的GB级性能");
     println!();

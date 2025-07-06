@@ -1,6 +1,6 @@
-# Universal Transport Protocol (UTP)
+# 🌀 Data Portal
 
-高性能跨平台通信协议 - Rust & Swift
+零拷贝数据传送门 - Rust & Swift
 
 ## 🚀 核心特性
 
@@ -167,25 +167,25 @@ cargo run --example file_size_performance_test
 
 **Rust服务端**:
 ```rust
-use universal_transport::UtpServer;
+use data_portal::PortalServer;
 
-let server = UtpServer::new("127.0.0.1:9090")?;
+let server = PortalServer::new("127.0.0.1:9090")?;
 server.start_shared_memory().await?;
 ```
 
 **Swift客户端**:
 ```swift
-import UniversalTransport
+import DataPortal
 
-let client = UtpClient(serverAddress: "127.0.0.1:9090")
+let client = PortalClient(serverAddress: "127.0.0.1:9090")
 try await client.connectSharedMemory()
 ```
 
 ## 📁 项目结构
 
 ```
-universal-transport/
-├── src/          # UTP服务器核心
+data-portal/
+├── src/          # Portal服务器核心
 ├── examples/     # 演示代码
 ├── rust/         # Rust传输引擎  
 ├── swift/        # Swift客户端

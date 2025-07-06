@@ -1,14 +1,14 @@
 [workspace]
 
 [package]
-name = "universal-transport"
+name = "data-portal"
 version = "2.0.0"
 edition = "2021"
 authors = ["Claude AI <noreply@anthropic.com>"]
 license = "MIT"
-description = "High-performance cross-platform communication protocol for Rust and Swift"
-repository = "https://github.com/Gyangu/universal-transport"
-keywords = ["transport", "ipc", "shared-memory", "zero-copy", "posix"]
+description = "🌀 Data Portal - 零拷贝数据传送门 | Zero-copy high-performance data transport"
+repository = "https://github.com/Gyangu/data-portal"
+keywords = ["portal", "data", "zero-copy", "shared-memory", "ipc"]
 categories = ["network-programming", "concurrency"]
 
 [dependencies]

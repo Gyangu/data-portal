@@ -1,4 +1,4 @@
-//! Universal Transport Protocol - 性能演示
+//! Data Portal - 性能演示
 //! 
 //! 展示真实的POSIX共享内存和网络TCP性能基准
 
@@ -12,7 +12,7 @@ use anyhow::Result;
 // UTP协议头部定义
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-struct UtpHeader {
+struct PortalHeader {
     magic: u32,       // 0x55545000
     version: u8,      // 协议版本
     msg_type: u8,     // 消息类型
@@ -24,7 +24,7 @@ struct UtpHeader {
     reserved: [u8; 4], // 保留字段
 }
 
-impl UtpHeader {
+impl PortalHeader {
     const MAGIC: u32 = 0x55545000;
     const SIZE: usize = 32;
     
@@ -98,18 +98,18 @@ fn test_posix_shared_memory() -> Result<()> {
         
         for i in 0..iterations {
             // 创建UTP头部
-            let header = UtpHeader::new(1, 1024, i);
+            let header = PortalHeader::new(1, 1024, i);
             let header_bytes = header.to_bytes();
             
             // 零拷贝写入
             ptr::copy_nonoverlapping(
                 header_bytes.as_ptr(),
                 shm_ptr,
-                UtpHeader::SIZE
+                PortalHeader::SIZE
             );
             
             // 零拷贝读取验证
-            let read_data = slice::from_raw_parts(shm_ptr, UtpHeader::SIZE);
+            let read_data = slice::from_raw_parts(shm_ptr, PortalHeader::SIZE);
             let _verification = read_data[0]; // 简单验证
             
             // 每100万次操作报告进度
@@ -153,7 +153,7 @@ fn test_network_tcp_simulation() -> Result<()> {
     
     for i in 0..iterations {
         // 模拟TCP网络传输开销
-        let header = UtpHeader::new(2, 1024, i);
+        let header = PortalHeader::new(2, 1024, i);
         let _bytes = header.to_bytes();
         
         // 模拟网络延迟（每10万次添加微小延迟）
@@ -189,7 +189,7 @@ fn test_network_tcp_simulation() -> Result<()> {
 
 /// 性能对比分析
 fn performance_comparison() {
-    info!("📈 Universal Transport Protocol 性能对比");
+    info!("📈 Data Portal 性能对比");
     info!("================================================");
     info!("传输模式           | 吞吐量      | 延迟     | 操作频率");
     info!("------------------|------------|----------|----------");
@@ -220,7 +220,7 @@ fn main() -> Result<()> {
         .with_env_filter("info")
         .init();
     
-    info!("🎯 Universal Transport Protocol v2.0 - 性能基准测试");
+    info!("🎯 Data Portal v2.0 - 性能基准测试");
     info!("====================================================");
     
     // 技术特点说明

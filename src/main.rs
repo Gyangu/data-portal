@@ -1,4 +1,4 @@
-//! Universal Transport Protocol (UTP) Server
+//! Data Portal (UTP) Server
 //! 
 //! 高性能跨平台传输协议服务器 - 完整实现
 //! 支持POSIX共享内存和网络TCP传输
@@ -16,7 +16,7 @@ use crc32fast::Hasher;
 /// UTP协议固定32字节头部
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct UtpHeader {
+pub struct PortalHeader {
     pub magic: u32,       // 0x55545000 ("UTP\0")
     pub version: u8,      // Protocol version
     pub msg_type: u8,     // Message type
@@ -28,7 +28,7 @@ pub struct UtpHeader {
     pub reserved: [u8; 4], // Reserved for future use
 }
 
-impl UtpHeader {
+impl PortalHeader {
     pub const MAGIC: u32 = 0x55545000;
     pub const SIZE: usize = 32;
     
@@ -186,7 +186,7 @@ impl Drop for SharedMemoryTransport {
 }
 
 /// UTP服务器主结构
-pub struct UtpServer {
+pub struct PortalServer {
     address: String,
     shared_memory: Option<SharedMemoryTransport>,
     stats: Arc<std::sync::Mutex<PerformanceStats>>,
@@ -200,7 +200,7 @@ pub struct PerformanceStats {
     pub last_report_time: Option<std::time::Instant>,
 }
 
-impl UtpServer {
+impl PortalServer {
     pub fn new(address: &str) -> Result<Self> {
         Ok(Self {
             address: address.to_string(),
@@ -241,7 +241,7 @@ impl UtpServer {
         loop {
             if let Some(ref shm) = self.shared_memory {
                 // 创建UTP头部
-                let header = UtpHeader::new(1, 1024, sequence);
+                let header = PortalHeader::new(1, 1024, sequence);
                 let header_bytes = header.to_bytes();
                 
                 // 零拷贝写入共享内存
@@ -251,12 +251,12 @@ impl UtpServer {
                 
                 // 零拷贝读取验证
                 let read_data = unsafe {
-                    shm.read_zero_copy(0, UtpHeader::SIZE)?
+                    shm.read_zero_copy(0, PortalHeader::SIZE)?
                 };
                 
                 let mut read_header_bytes = [0u8; 32];
                 read_header_bytes.copy_from_slice(read_data);
-                let read_header = UtpHeader::from_bytes(&read_header_bytes);
+                let read_header = PortalHeader::from_bytes(&read_header_bytes);
                 
                 // 验证校验和
                 if !read_header.verify_checksum() {
@@ -332,11 +332,11 @@ impl UtpServer {
                     break;
                 }
                 Ok(n) => {
-                    if n >= UtpHeader::SIZE {
+                    if n >= PortalHeader::SIZE {
                         let header_bytes: [u8; 32] = buffer[..32].try_into().unwrap();
-                        let header = UtpHeader::from_bytes(&header_bytes);
+                        let header = PortalHeader::from_bytes(&header_bytes);
                         
-                        if header.magic == UtpHeader::MAGIC && header.verify_checksum() {
+                        if header.magic == PortalHeader::MAGIC && header.verify_checksum() {
                             debug!("📦 收到UTP消息: type={}, len={}, seq={}", 
                                   header.msg_type, header.payload_len, header.sequence);
                             
@@ -370,16 +370,16 @@ impl UtpServer {
 async fn main() -> Result<()> {
     // 初始化日志系统
     tracing_subscriber::fmt()
-        .with_env_filter("universal_transport=info")
+        .with_env_filter("data_portal=info")
         .init();
     
-    info!("🚀 Universal Transport Protocol v2.0 服务器启动");
+    info!("🚀 Data Portal v2.0 服务器启动");
     info!("📋 支持的传输模式:");
     info!("  - POSIX共享内存: 17.2 GB/s, 0.02μs延迟");
     info!("  - 网络TCP: 800 MB/s, 0.1μs延迟");
     info!("  - 零拷贝传输: 消除JSON序列化开销");
     
-    let mut server = UtpServer::new("127.0.0.1:9090")?;
+    let mut server = PortalServer::new("127.0.0.1:9090")?;
     
     // 启动共享内存传输（默认模式）
     info!("🎯 启动默认模式: POSIX共享内存");
@@ -394,8 +394,8 @@ mod tests {
     
     #[test]
     fn test_utp_header_creation() {
-        let header = UtpHeader::new(1, 1024, 42);
-        assert_eq!(header.magic, UtpHeader::MAGIC);
+        let header = PortalHeader::new(1, 1024, 42);
+        assert_eq!(header.magic, PortalHeader::MAGIC);
         assert_eq!(header.version, 2);
         assert_eq!(header.msg_type, 1);
         assert_eq!(header.payload_len, 1024);
@@ -405,9 +405,9 @@ mod tests {
     
     #[test]
     fn test_utp_header_serialization() {
-        let header = UtpHeader::new(2, 2048, 123);
+        let header = PortalHeader::new(2, 2048, 123);
         let bytes = header.to_bytes();
-        let deserialized = UtpHeader::from_bytes(&bytes);
+        let deserialized = PortalHeader::from_bytes(&bytes);
         
         assert_eq!(header.magic, deserialized.magic);
         assert_eq!(header.msg_type, deserialized.msg_type);
