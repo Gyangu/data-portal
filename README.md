@@ -144,6 +144,22 @@ TCP窗口大小动态调整:
 
 ## 🔧 快速开始
 
+### 📦 安装
+
+**Rust项目**:
+```toml
+[dependencies]
+data-portal = "2.0.0"
+```
+
+**Swift项目**:
+```swift
+// Package.swift
+dependencies: [
+    .package(url: "https://github.com/Gyangu/data-portal", from: "2.0.0")
+]
+```
+
 ### 编译运行
 
 ```bash
