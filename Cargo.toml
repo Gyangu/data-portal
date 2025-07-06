@@ -24,3 +24,7 @@ bincode = "1.3"
 [[example]]
 name = "simple_demo"
 path = "examples/simple_demo.rs"
+
+[[example]]
+name = "cross_language_test"
+path = "examples/cross_language_test.rs"

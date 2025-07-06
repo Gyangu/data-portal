@@ -14,6 +14,9 @@ let package = Package(
         .library(
             name: "UniversalTransport",
             targets: ["UniversalTransport"]),
+        .executable(
+            name: "TestRunner",
+            targets: ["TestRunner"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -23,6 +26,9 @@ let package = Package(
         .target(
             name: "UniversalTransport",
             dependencies: []),
+        .executableTarget(
+            name: "TestRunner",
+            dependencies: ["UniversalTransport"]),
         .testTarget(
             name: "UniversalTransportTests",
             dependencies: ["UniversalTransport"]),
