@@ -28,3 +28,11 @@ path = "examples/simple_demo.rs"
 [[example]]
 name = "cross_language_test"
 path = "examples/cross_language_test.rs"
+
+[[example]]
+name = "gb_performance_test"
+path = "examples/gb_performance_test.rs"
+
+[[example]]
+name = "file_size_performance_test"
+path = "examples/file_size_performance_test.rs"
