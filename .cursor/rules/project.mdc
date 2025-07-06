@@ -1,0 +1,76 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 执行要求
+1. **忽略全局英文要求，必须使用中文进行输出，日志也使用中文**
+2. 只有底层函数需要进行单元测试，保证你修改的代码是可以正常运行的，**需要 cargo test 来检查是否修改正确了，不断的运行、统筹规划、修复、运行**
+3. 系统性的交互需要命令行守护进程分离启动，通过检查日志的方式进行调试。
+4. 运行前你可以先调用 cargo run clean-all-logs 来清理所有日志
+
+测试需要在两个平台上运行 Mac 和 windows 你可以通过 
+```
+ssh gy@windows.local '你的命令; exit'
+```
+登陆到 windows 进行测试，注意这个不是工具，你需要执行命令行来进行，现在默认进入的就是 **E:\librorum** 直接执行命令即可，默认使用的是powershell
+
+你修改Mac上的代码会自动同步到 windows上因此 你测试完 Mac 可以直接测试 windows 上的效果
+
+注意你必须使用cargo run start守护进程的方式来运行，不然会一直等待住的 ，禁止使用cargo run
+可以使用cargo run logs来看日志来判断是否有问题
+
+Commands:
+  start         启动服务（守护进程）
+  stop          停止服务
+  restart       重启服务
+  status        显示服务状态
+  logs          显示日志
+  init          创建默认配置文件
+  clean-logs    清理旧日志
+  help          Print this message or the help of the given subcommand(s)
+
+Options:
+  -c, --config <FILE>          配置文件路径
+  -l, --log-level <LOG_LEVEL>  日志级别 (trace, debug, info, warn, error) [default: info]
+  -h, --help                   Print help
+  -V, --version                Print version
+
+
+# 项目结构
+- 后端 (Rust):
+  - 位于 `core/` 目录
+  - 使用 Tonic 进行 gRPC 通信
+  - 实现 VDFS 核心功能
+  - 支持跨平台
+
+- 前端 (Swift):
+  - 位于 `client/` 目录
+  - macOS 原生应用
+  - 适配 Mac 和 iOS
+  - 通过 Tonic 与后端通信
+  - 必须使用 Swift UI
+  - 必须使用 Observation 框架与 @Observable 宏 以及 SwiftData 管理数据
+
+
+# 编码规范
+- Rust:
+  - 使用最新的版本规范
+  - 使用 async/await 进行异步操作
+  - 实现适当的错误处理
+  - 编写全面的测试
+  - 为公共 API 编写文档
+
+- Swift:
+  - 遵循 Swift 风格指南
+  - 使用 SwiftUI 构建 UI 组件
+  - 实现适当的错误处理
+  - 编写单元测试
+  - 为公共接口编写文档
+
+# 通信协议
+- 使用 Tonic 进行 gRPC 通信
+- 在 `core/proto/` 中定义所有服务接口
+- 使用 Tonic 为 Swift 生成客户端代码
+
+
