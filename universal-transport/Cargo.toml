@@ -1,44 +1,42 @@
+[workspace]
+
 [package]
-name = "universal-transport"
+name = "data-portal"
 version = "2.0.0"
 edition = "2021"
 authors = ["Claude AI <noreply@anthropic.com>"]
 license = "MIT"
-description = "High-performance cross-platform communication protocol for Rust and Swift"
-repository = "https://github.com/Gyangu/universal-transport"
-keywords = ["transport", "ipc", "shared-memory", "zero-copy", "posix"]
+description = "🌀 Data Portal - 零拷贝数据传送门 | Zero-copy high-performance data transport"
+repository = "https://github.com/Gyangu/data-portal"
+keywords = ["portal", "data", "zero-copy", "shared-memory", "ipc"]
 categories = ["network-programming", "concurrency"]
-
-[workspace]
-members = [
-    "rust/core",
-    "rust/shared-memory", 
-    "rust/network"
-]
 
 [dependencies]
 tokio = { version = "1.44", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1.0"
+libc = "0.2"
+crc32fast = "1.4"
 serde = { version = "1.0", features = ["derive"] }
 bincode = "1.3"
-crc32fast = "1.4"
-tracing = "0.1"
-anyhow = "1.0"
-
-[dev-dependencies]
-criterion = "0.5"
-
-[[bin]]
-name = "utp-server"
-path = "src/main.rs"
 
 [[example]]
 name = "simple_demo"
-path = "examples/simple_rust_demo.rs"
+path = "examples/simple_demo.rs"
 
 [[example]]
-name = "shared_memory_demo"
-path = "examples/shared_memory_demo.rs"
+name = "cross_language_test"
+path = "examples/cross_language_test.rs"
 
-[[bench]]
-name = "posix_benchmark"
-harness = false
+[[example]]
+name = "gb_performance_test"
+path = "examples/gb_performance_test.rs"
+
+[[example]]
+name = "file_size_performance_test"
+path = "examples/file_size_performance_test.rs"
+
+[[example]]
+name = "complete_performance_matrix"
+path = "examples/complete_performance_matrix.rs"

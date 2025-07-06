@@ -1,6 +1,7 @@
 pub mod file_service;
 // pub mod hybrid_file_service; // 暂时禁用复杂版本
 pub mod hybrid_file_service_simple;
+pub mod hybrid_file_service_v2; // Data Portal 集成版本
 pub mod hybrid_node_manager;
 pub mod log_service;
 pub mod mdns_manager;
@@ -12,6 +13,7 @@ pub mod node_service;
 
 pub use file_service::FileServiceImpl;
 pub use hybrid_file_service_simple::{SimpleHybridFileService, TransferStats};
+pub use hybrid_file_service_v2::{HybridFileServiceV2, TransferStats as V2TransferStats}; // Data Portal 版本
 pub use hybrid_node_manager::HybridNodeManager;
 pub use log_service::LogServiceImpl;
 pub use network_config::NetworkConfig;

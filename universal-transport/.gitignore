@@ -1,59 +1,30 @@
 # Rust
 /target/
-**/*.rs.bk
 Cargo.lock
+**/*.rs.bk
+*.pdb
 
-# Swift
+# OS
 .DS_Store
-/.build
-/Packages
-/*.xcodeproj
-xcuserdata/
-DerivedData/
-.swiftpm/config/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
-.netrc
+Thumbs.db
 
-# IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Runtime generated
-/tmp/
-/temp/
-*.tmp
+*~
 
 # Build artifacts
-/build/
-/dist/
+*.o
+*.so
+*.dylib
+*.dll
 
-# Performance test results
-/benchmarks/results/
-*.benchmark
+# Test results
+test-results/
+benchmark-results/
 
-# Shared memory files
-/dev/shm/utp_*
-/tmp/utp_*
-
-# Documentation build
-/docs/_build/
-
-# Environment files
-.env
-.env.local
-.env.production
+# Temporary files
+*.tmp
+*.temp

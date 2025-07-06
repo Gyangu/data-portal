@@ -265,6 +265,8 @@ struct DetailView: View {
                 NodesView(coreManager: coreManager)
             case .files:
                 FilesView(coreManager: coreManager)
+            case .dataPortal:
+                DataPortalView()
             case .sync:
                 SyncStatusView(coreManager: coreManager, modelContext: modelContext)
             case .security:
@@ -304,6 +306,7 @@ enum NavigationTab: String, CaseIterable {
     case dashboard = "dashboard"
     case nodes = "nodes"
     case files = "files"
+    case dataPortal = "data_portal"
     case sync = "sync"
     case security = "security"
     case logs = "logs"
@@ -313,6 +316,7 @@ enum NavigationTab: String, CaseIterable {
         case .dashboard: return "仪表盘"
         case .nodes: return "节点"
         case .files: return "文件"
+        case .dataPortal: return "Data Portal"
         case .sync: return "同步"
         case .security: return "安全"
         case .logs: return "日志"
@@ -324,6 +328,7 @@ enum NavigationTab: String, CaseIterable {
         case .dashboard: return "gauge"
         case .nodes: return "network"
         case .files: return "folder"
+        case .dataPortal: return "bolt.circle"
         case .sync: return "arrow.triangle.2.circlepath"
         case .security: return "lock.shield"
         case .logs: return "doc.text"

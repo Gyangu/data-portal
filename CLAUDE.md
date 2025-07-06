@@ -223,3 +223,54 @@ class MediaManager: ObservableObject {
 - Enables seamless cross-device media experience
 
 The architecture emphasizes clean separation between the high-performance Rust backend and the native Swift UI, connected via gRPC and managed through the embedded binary approach.
+
+## Git Repository Structure
+
+**CRITICAL**: This directory contains multiple separate git repositories. Always be careful about which repository you're working in:
+
+```
+/Users/gy/librorum/
+├── .git/ ──────────────────────► librorum主仓库 (分布式文件系统)
+├── universal-transport/
+│   └── .git/ ──────────────────► universal-transport仓库 (UTP协议) ⭐ 独立项目
+└── swift-projects/SwiftAeron/
+    └── .git/ ──────────────────► SwiftAeron仓库 (Swift Aeron项目)
+```
+
+**重要提醒**:
+- **librorum** (`/Users/gy/librorum/`): 主要的分布式文件系统项目
+- **universal-transport** (`/Users/gy/librorum/universal-transport/`): 独立的高性能通信协议项目
+- **SwiftAeron** (`/Users/gy/librorum/swift-projects/SwiftAeron/`): Swift Aeron实现
+
+**操作前必须检查**:
+1. 使用 `pwd` 确认当前目录
+2. 使用 `git status` 确认所在仓库
+3. 不要将一个项目的文件add到另一个项目
+4. 确保推送到正确的远程仓库
+
+## High-Performance Transport Integration (UTP)
+
+Universal Transport Protocol (UTP) has been developed as a separate project at `/Users/gy/librorum/universal-transport/` and can be integrated into librorum for file transfer operations:
+
+### UTP Performance Characteristics
+- **Shared Memory**: Up to 69.4 GB/s (16KB blocks), 77ns latency
+- **TCP Network**: Up to 7.7 GB/s (16MB blocks), 1.6ms latency  
+- **Zero-Copy**: POSIX shared memory with direct pointer operations
+- **Cross-Language**: Rust ↔ Swift binary compatibility
+
+### Integration Points
+```rust
+// Replace existing file transfer with UTP
+use universal_transport::{UtpServer, SharedMemoryTransport};
+
+// In file sync operations
+let utp_server = UtpServer::new("127.0.0.1:9090")?;
+utp_server.start_shared_memory().await?;
+```
+
+**Hybrid Architecture**:
+- **Control Operations**: Continue using gRPC (metadata, authentication, coordination)
+- **Data Transfer**: Switch to UTP for file content (massive performance gain)
+- **Automatic Mode Selection**: UTP chooses shared memory vs TCP based on target
+
+This integration provides 20-98x performance improvement over current gRPC file transfers while maintaining the existing control plane architecture.

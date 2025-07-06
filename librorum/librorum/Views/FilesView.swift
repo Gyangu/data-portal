@@ -204,36 +204,19 @@ struct FilesView: View {
         defer { url.stopAccessingSecurityScopedResource() }
         
         do {
-            guard let communicator = coreManager.grpcCommunicator else {
-                errorMessage = "未连接到后端服务"
-                return
-            }
-            
-            let data = try Data(contentsOf: url)
             let fileName = url.lastPathComponent
             let filePath = currentPath + (currentPath.hasSuffix("/") ? "" : "/") + fileName
             
-            // Create upload metadata
-            let metadata = FileUploadMetadata(
-                filename: fileName,
-                path: filePath,
-                fileType: url.hasDirectoryPath ? .directory : .file,
-                size: Int64(data.count),
-                permissions: "644",
-                overwrite: true,
-                createDirectories: true,
-                isEncrypted: UserDefaults.standard.bool(forKey: "auto_encrypt_files"),
-                encryptionAlgorithm: UserDefaults.standard.bool(forKey: "auto_encrypt_files") ? EncryptionAlgorithm.aes256gcm.rawValue : nil,
-                keyId: nil
-            )
+            // 使用 Data Portal 文件上传服务
+            let uploadService = FileUploadService()
+            try await uploadService.initialize()
             
-            // Upload to backend with progress
-            let result = try await communicator.uploadFileWithProgress(
-                metadata: metadata,
-                data: data
+            let result = await uploadService.uploadFile(
+                localPath: url.path,
+                remotePath: filePath
             ) { progress in
                 Task { @MainActor in
-                    self.uploadProgress = progress.percentage
+                    self.uploadProgress = progress.percentComplete / 100.0
                 }
             }
             
@@ -242,7 +225,7 @@ struct FilesView: View {
                 let fileItem = FileItem(
                     path: filePath,
                     name: fileName,
-                    size: Int64(data.count),
+                    size: Int64(getFileSize(url) ?? 0),
                     modificationDate: Date(),
                     isDirectory: false,
                     parentPath: currentPath
@@ -251,9 +234,9 @@ struct FilesView: View {
                 modelContext.insert(fileItem)
                 try? modelContext.save()
                 
-                print("✅ File uploaded successfully: \(fileName) (\(result.bytesUploaded) bytes)")
+                print("✅ File uploaded via Data Portal: \(fileName) (\(formatTransferRate(result.transferRate)))")
             } else {
-                errorMessage = "上传失败: \(result.message)"
+                errorMessage = "上传失败: \(result.error ?? "未知错误")"
             }
         } catch {
             errorMessage = "上传文件失败: \(error.localizedDescription)"
@@ -261,21 +244,13 @@ struct FilesView: View {
         }
     }
     
-    private func getMimeType(for url: URL) -> String {
-        let ext = url.pathExtension.lowercased()
-        switch ext {
-        case "txt": return "text/plain"
-        case "json": return "application/json"
-        case "jpg", "jpeg": return "image/jpeg"
-        case "png": return "image/png"
-        case "pdf": return "application/pdf"
-        case "zip": return "application/zip"
-        default: return "application/octet-stream"
+    private func getFileSize(_ url: URL) -> Int64? {
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            return attributes[.size] as? Int64
+        } catch {
+            return nil
         }
-    }
-    
-    private func calculateChecksum(_ data: Data) -> String {
-        return data.sha256
     }
 }
 

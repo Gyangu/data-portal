@@ -28,6 +28,10 @@ struct ContentView: View {
                     NodesView(coreManager: coreManager)
                         .navigationTitle("节点")
                     
+                case .dataPortal:
+                    DataPortalView()
+                        .navigationTitle("Data Portal")
+                    
                 case .sync:
                     SyncStatusView(coreManager: coreManager, modelContext: modelContext)
                         .navigationTitle("同步")

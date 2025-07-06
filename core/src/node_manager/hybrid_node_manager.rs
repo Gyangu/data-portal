@@ -15,12 +15,12 @@ use tokio::time::interval;
 use tonic::transport::Server;
 use tracing::{debug, info, warn, error};
 
-use crate::node_manager::hybrid_file_service_simple::{SimpleHybridFileService, TransferStats};
+use crate::node_manager::hybrid_file_service_v2::HybridFileServiceV2;
 use crate::node_manager::log_service::LogServiceImpl;
 use crate::node_manager::mdns_manager::MdnsManager;
 use crate::node_manager::node_client::NodeClient;
 use crate::node_manager::node_health::{HealthMonitor, NodeHealth, NodeStatus};
-use crate::node_manager::node_service::{NodeInfo, NodeServiceImpl};
+use crate::node_manager::node_service::NodeServiceImpl;
 use crate::vdfs::VDFSConfig;
 
 /// Hybrid节点管理器
@@ -50,7 +50,7 @@ pub struct HybridNodeManager {
     config: Option<NodeConfig>,
     
     /// Hybrid文件服务
-    hybrid_file_service: Option<Arc<SimpleHybridFileService>>,
+    hybrid_file_service: Option<Arc<HybridFileServiceV2>>,
 }
 
 impl HybridNodeManager {
@@ -150,14 +150,22 @@ impl HybridNodeManager {
             VDFSConfig::default()
         };
 
-        // 创建并初始化Hybrid文件服务
-        let mut hybrid_file_service = SimpleHybridFileService::new(self.utp_bind_address);
+        // 创建并初始化Hybrid文件服务V2
+        let storage_path = if let Some(config) = &self.config {
+            config.data_dir.to_string_lossy().to_string()
+        } else {
+            "/tmp/librorum_storage".to_string()
+        };
         
-        // 简化版本不需要VDFS初始化
-        info!("📦 使用简化版Hybrid文件服务");
-
-        // 简化版本不需要显式启动UTP服务器
-        info!("🚀 Hybrid文件服务就绪");
+        let mut hybrid_file_service = HybridFileServiceV2::new(storage_path.clone());
+        
+        // 初始化VDFS
+        if let Err(e) = hybrid_file_service.init_vdfs(_vdfs_config).await {
+            warn!("⚠️ VDFS初始化失败，使用内存存储: {}", e);
+        }
+        
+        info!("📦 使用HybridFileServiceV2 with Data Portal集成");
+        info!("🚀 Hybrid文件服务V2就绪，存储路径: {}", storage_path);
 
         self.hybrid_file_service = Some(Arc::new(hybrid_file_service));
 
@@ -175,35 +183,33 @@ impl HybridNodeManager {
     }
 
     /// 启动gRPC服务器
-    async fn start_grpc_server(&self) -> Result<()> {
+    async fn start_grpc_server(&mut self) -> Result<()> {
         let addr: SocketAddr = self.grpc_bind_address.parse()
             .context("Invalid gRPC bind address")?;
 
         info!("🌐 启动gRPC服务器: {}", addr);
 
         // 创建服务实例
-        let node_service = NodeServiceImpl::new(NodeInfo {
-            id: self.node_id.clone(),
-            address: self.grpc_bind_address.clone(),
-            // status: NodeStatus::Online, // 字段不存在，移除
-            system_info: self.system_info.clone(),
-            capabilities: vec!["file_storage".to_string(), "hybrid_transport".to_string()],
-            metadata: std::collections::HashMap::new(),
-            last_seen: chrono::Utc::now().timestamp(),
-        });
+        let node_service = NodeServiceImpl::new(
+            self.node_id.clone(),
+            self.grpc_bind_address.clone(),
+            self.system_info.clone(),
+        );
 
         let log_service = LogServiceImpl::new();
 
-        // 使用Hybrid文件服务
-        let file_service = self.hybrid_file_service.as_ref()
-            .ok_or_else(|| anyhow::anyhow!("Hybrid文件服务未初始化"))?
-            .clone();
+        // 使用Hybrid文件服务 - 暂时移动所有权
+        let file_service = self.hybrid_file_service.take()
+            .ok_or_else(|| anyhow::anyhow!("Hybrid文件服务未初始化"))?;
+
+        let file_service_owned = Arc::try_unwrap(file_service)
+            .map_err(|_| anyhow::anyhow!("无法获取文件服务所有权"))?;
 
         // 创建gRPC服务器
         let grpc_server = Server::builder()
             .add_service(NodeServiceServer::new(node_service))
             .add_service(LogServiceServer::new(log_service))
-            .add_service(FileServiceServer::new(file_service.as_ref().clone()))
+            .add_service(FileServiceServer::new(file_service_owned))
             .serve(addr);
 
         // 在后台运行gRPC服务器
@@ -223,45 +229,40 @@ impl HybridNodeManager {
 
         let node_id = self.node_id.clone();
         let bind_address = self.grpc_bind_address.clone();
-        let utp_address = self.utp_bind_address.to_string();
+        let _utp_address = self.utp_bind_address.to_string();
         let discovered_nodes = self.discovered_nodes.clone();
+
+        // 从bind_address中提取端口
+        let port = bind_address.split(':').last()
+            .and_then(|p| p.parse::<u16>().ok())
+            .unwrap_or(50051);
 
         // 启动mDNS管理器
         tokio::spawn(async move {
-            match MdnsManager::new(&node_id, &bind_address).await {
-                Ok(mut mdns_manager) => {
-                    // 注册服务，包含UTP端口信息
-                    let mut service_txt = std::collections::HashMap::new();
-                    service_txt.insert("utp_address".to_string(), utp_address);
-                    service_txt.insert("hybrid_mode".to_string(), "enabled".to_string());
+            let mdns_manager = MdnsManager::new(node_id, port);
+            
+            // 注册服务
+            if let Err(e) = mdns_manager.register() {
+                error!("❌ mDNS服务注册失败: {}", e);
+                return;
+            }
 
-                    if let Err(e) = mdns_manager.register_service(Some(service_txt)).await {
-                        error!("❌ mDNS服务注册失败: {}", e);
-                        return;
+            // 启动服务发现
+            let discovered_nodes_clone = discovered_nodes.clone();
+            if let Err(e) = mdns_manager.start_discovery(
+                move |node_id, address, port| {
+                    debug!("🔍 发现节点: {} {}:{}", node_id, address, port);
+                    let mut nodes = discovered_nodes_clone.lock().unwrap();
+                    let service_address = format!("{}:{}", address, port);
+                    if !nodes.contains(&service_address) {
+                        nodes.push(service_address);
                     }
-
-                    // 持续监听服务发现
-                    loop {
-                        match mdns_manager.discover_services().await {
-                            Ok(services) => {
-                                if !services.is_empty() {
-                                    debug!("🔍 发现 {} 个服务", services.len());
-                                    let mut nodes = discovered_nodes.lock().unwrap();
-                                    nodes.clear();
-                                    nodes.extend(services);
-                                }
-                            }
-                            Err(e) => {
-                                warn!("⚠️ 服务发现失败: {}", e);
-                            }
-                        }
-
-                        tokio::time::sleep(Duration::from_secs(30)).await;
-                    }
+                },
+                move |node_id| {
+                    debug!("📤 节点离线: {}", node_id);
                 }
-                Err(e) => {
-                    error!("❌ mDNS管理器启动失败: {}", e);
-                }
+            ).await {
+                error!("❌ mDNS服务发现失败: {}", e);
             }
         });
 
@@ -273,7 +274,7 @@ impl HybridNodeManager {
     async fn start_health_monitoring(&self) -> Result<()> {
         info!("💗 启动健康监控...");
 
-        let health_monitor = self.health_monitor.clone();
+        let _health_monitor = self.health_monitor.clone();
         let known_nodes = self.known_nodes.clone();
         let hybrid_file_service = self.hybrid_file_service.clone();
 
@@ -287,43 +288,41 @@ impl HybridNodeManager {
                 // 检查已知节点的健康状态
                 let nodes = known_nodes.lock().await.clone();
                 for node_address in nodes {
-                    match NodeClient::new(&node_address).await {
-                        Ok(mut client) => {
-                            match client.get_health().await {
-                                Ok(health) => {
-                                    // 简化实现：跳过健康状态更新
-                                    debug!("更新节点健康状态: {} {:?}", node_address, health);
-                                    debug!("💗 节点健康检查成功: {}", node_address);
-                                }
-                                Err(e) => {
-                                    let offline_health = NodeHealth {
-                                        node_id: node_address.clone(),
-                                        status: NodeStatus::Offline,
-                                        last_heartbeat: chrono::Utc::now(),
-                                        cpu_usage: 0.0,
-                                        memory_usage: 0.0,
-                                        disk_usage: 0.0,
-                                        network_latency: None,
-                                        uptime: 0,
-                                        error_message: Some(format!("健康检查失败: {}", e)),
-                                    };
-                                    // 简化实现：跳过健康状态更新  
-                                    debug!("节点离线: {} {:?}", node_address, offline_health);
-                                    warn!("⚠️ 节点健康检查失败: {} - {}", node_address, e);
-                                }
-                            }
+                    let client = NodeClient::new(
+                        format!("health_check_{}", node_address),
+                        format!("{}:health", node_address),
+                        "Health Monitor".to_string()
+                    );
+                    
+                    match client.send_heartbeat(&node_address).await {
+                        Ok(heartbeat_response) => {
+                            // 简化实现：跳过健康状态更新
+                            debug!("更新节点健康状态: {} {:?}", node_address, heartbeat_response);
+                            debug!("💗 节点健康检查成功: {}", node_address);
                         }
                         Err(e) => {
-                            warn!("⚠️ 无法连接到节点: {} - {}", node_address, e);
+                            let offline_health = NodeHealth {
+                                node_id: node_address.clone(),
+                                address: node_address.clone(),
+                                system_info: "Unknown".to_string(),
+                                last_heartbeat: chrono::Utc::now(),
+                                failure_count: 1,
+                                status: NodeStatus::Offline,
+                                latency_ms: None,
+                            };
+                            // 简化实现：跳过健康状态更新  
+                            debug!("节点离线: {} {:?}", node_address, offline_health);
+                            warn!("⚠️ 节点健康检查失败: {} - {}", node_address, e);
                         }
                     }
                 }
 
-                // 检查UTP传输统计
+                // 检查传输统计
                 if let Some(file_service) = &hybrid_file_service {
-                    let stats = file_service.get_transfer_stats();
-                    debug!("📊 UTP传输统计: 总会话数={}, 成功传输={}, 失败传输={}", 
-                        stats.total_sessions, stats.active_uploads, stats.active_downloads);
+                    let stats = file_service.get_transfer_stats().await;
+                    debug!("📊 传输统计: 总会话数={}, 活跃上传={}, 活跃下载={}, 零拷贝比例={:.1}%", 
+                        stats.total_sessions, stats.active_uploads, stats.active_downloads, 
+                        stats.zero_copy_ratio * 100.0);
                 }
             }
         });
@@ -395,16 +394,19 @@ impl HybridNodeManager {
         vec![]
     }
 
-    /// 获取UTP传输统计
-    pub fn get_utp_stats(&self) -> Option<TransferStats> {
-        self.hybrid_file_service.as_ref().map(|service| service.get_transfer_stats())
+    /// 获取传输统计
+    pub async fn get_transfer_stats(&self) -> Option<crate::node_manager::V2TransferStats> {
+        match &self.hybrid_file_service {
+            Some(service) => Some(service.get_transfer_stats().await),
+            None => None
+        }
     }
 
-    /// 清理完成的UTP会话
-    pub async fn cleanup_utp_sessions(&self) {
-        if let Some(file_service) = &self.hybrid_file_service {
+    /// 清理完成的传输会话
+    pub async fn cleanup_transfer_sessions(&self) {
+        if let Some(_file_service) = &self.hybrid_file_service {
             // 这里可以添加清理逻辑
-            debug!("🧹 清理UTP会话");
+            debug!("🧹 清理传输会话");
         }
     }
 

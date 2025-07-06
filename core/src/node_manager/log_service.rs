@@ -11,9 +11,9 @@ use std::collections::HashMap;
 use std::pin::Pin;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tokio_stream::{wrappers::ReceiverStream, Stream, StreamExt};
-use tonic::{Request, Response, Status, Streaming};
-use tracing::{debug, error, info, warn};
+use tokio_stream::{wrappers::ReceiverStream, Stream};
+use tonic::{Request, Response, Status};
+use tracing::{debug, info};
 
 pub struct LogServiceImpl {
     // 内存中的日志存储
