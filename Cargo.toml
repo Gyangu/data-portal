@@ -1,0 +1,20 @@
+[package]
+name = "universal-transport"
+version = "2.0.0"
+edition = "2021"
+authors = ["Claude AI <noreply@anthropic.com>"]
+license = "MIT"
+description = "High-performance cross-platform communication protocol for Rust and Swift"
+repository = "https://github.com/Gyangu/universal-transport"
+keywords = ["transport", "ipc", "shared-memory", "zero-copy", "posix"]
+categories = ["network-programming", "concurrency"]
+
+[dependencies]
+tokio = { version = "1.44", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+anyhow = "1.0"
+
+[[example]]
+name = "simple_demo"
+path = "examples/simple_demo.rs"
