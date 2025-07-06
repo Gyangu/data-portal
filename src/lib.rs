@@ -1,4 +1,4 @@
-//! Universal Transport Protocol 库
+//! Data Portal 库
 //! 
 //! 高性能跨平台传输协议库，支持POSIX共享内存和TCP网络传输
 
@@ -11,7 +11,7 @@ pub mod protocol {
     /// UTP协议固定32字节头部
     #[repr(C)]
     #[derive(Debug, Clone, Copy)]
-    pub struct UtpHeader {
+    pub struct PortalHeader {
         pub magic: u32,       // 0x55545000 ("UTP\0")
         pub version: u8,      // Protocol version
         pub msg_type: u8,     // Message type
@@ -23,7 +23,7 @@ pub mod protocol {
         pub reserved: [u8; 4], // Reserved for future use
     }
     
-    impl UtpHeader {
+    impl PortalHeader {
         pub const MAGIC: u32 = 0x55545000;
         pub const SIZE: usize = 32;
         

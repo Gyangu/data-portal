@@ -6,7 +6,7 @@ use std::time::Instant;
 use std::ptr;
 use std::fs;
 use std::path::Path;
-use universal_transport::{UtpHeader, SharedMemoryTransport};
+use data_portal::{PortalHeader, SharedMemoryTransport};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use anyhow::Result;
@@ -299,7 +299,7 @@ async fn test_tcp_file_sizes() -> Result<Vec<FileSizeTestResult>> {
 
 /// 生成综合性能报告
 fn generate_file_size_report(shm_results: &[FileSizeTestResult], tcp_results: &[FileSizeTestResult]) {
-    println!("\n📊 Universal Transport Protocol 文件大小性能分析报告");
+    println!("\n📊 Data Portal 文件大小性能分析报告");
     println!("================================================================================");
     println!("文件大小     | 传输模式   | 传输时间  | 吞吐量      | GB/s性能 | 有效延迟");
     println!("-------------|-----------|----------|------------|----------|----------");
@@ -365,7 +365,7 @@ fn generate_file_size_report(shm_results: &[FileSizeTestResult], tcp_results: &[
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("🎯 Universal Transport Protocol 文件大小性能测试");
+    println!("🎯 Data Portal 文件大小性能测试");
     println!("=================================================");
     println!("测试目标: 验证不同文件大小下的传输性能");
     println!();

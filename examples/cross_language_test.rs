@@ -15,7 +15,7 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tracing::{info, error};
 use anyhow::Result;
-use universal_transport::{UtpHeader, SharedMemoryTransport};
+use data_portal::{PortalHeader, SharedMemoryTransport};
 
 #[derive(Debug, Clone)]
 pub struct TestResult {
@@ -68,14 +68,14 @@ pub async fn test_rust_rust_shared_memory() -> Result<TestResult> {
             let read_data = unsafe { shm.read_zero_copy(0, 32)? };
             let mut header_bytes = [0u8; 32];
             header_bytes.copy_from_slice(read_data);
-            let header = UtpHeader::from_bytes(&header_bytes);
+            let header = PortalHeader::from_bytes(&header_bytes);
             
             if header.verify_checksum() {
                 server_ops += 1;
                 server_bytes += 32;
                 
                 // 回复消息
-                let response = UtpHeader::new(2, 1024, i);
+                let response = PortalHeader::new(2, 1024, i);
                 let response_bytes = response.to_bytes();
                 unsafe { shm.write_zero_copy(&response_bytes, 32)? };
                 server_bytes += 32;
@@ -106,7 +106,7 @@ pub async fn test_rust_rust_shared_memory() -> Result<TestResult> {
         
         for i in 0..iterations {
             // 发送消息
-            let header = UtpHeader::new(1, 1024, i);
+            let header = PortalHeader::new(1, 1024, i);
             let header_bytes = header.to_bytes();
             unsafe { shm.write_zero_copy(&header_bytes, 0)? };
             client_bytes += 32;
@@ -115,7 +115,7 @@ pub async fn test_rust_rust_shared_memory() -> Result<TestResult> {
             let read_data = unsafe { shm.read_zero_copy(32, 32)? };
             let mut response_bytes = [0u8; 32];
             response_bytes.copy_from_slice(read_data);
-            let response = UtpHeader::from_bytes(&response_bytes);
+            let response = PortalHeader::from_bytes(&response_bytes);
             
             if response.verify_checksum() {
                 client_ops += 1;
@@ -194,14 +194,14 @@ pub async fn test_rust_rust_tcp() -> Result<TestResult> {
             match stream.read(&mut buffer).await {
                 Ok(n) if n >= 32 => {
                     let header_bytes: [u8; 32] = buffer[..32].try_into().unwrap();
-                    let header = UtpHeader::from_bytes(&header_bytes);
+                    let header = PortalHeader::from_bytes(&header_bytes);
                     
                     if header.verify_checksum() {
                         server_ops += 1;
                         server_bytes += n as u64;
                         
                         // 回复消息
-                        let response = UtpHeader::new(2, 1024, header.sequence);
+                        let response = PortalHeader::new(2, 1024, header.sequence);
                         let response_bytes = response.to_bytes();
                         stream.write_all(&response_bytes).await?;
                         server_bytes += 32;
@@ -235,7 +235,7 @@ pub async fn test_rust_rust_tcp() -> Result<TestResult> {
         
         for i in 0..iterations {
             // 发送消息
-            let header = UtpHeader::new(1, 1024, i);
+            let header = PortalHeader::new(1, 1024, i);
             let header_bytes = header.to_bytes();
             stream.write_all(&header_bytes).await?;
             client_bytes += 32;
@@ -244,7 +244,7 @@ pub async fn test_rust_rust_tcp() -> Result<TestResult> {
             match stream.read(&mut buffer).await {
                 Ok(n) if n >= 32 => {
                     let response_bytes: [u8; 32] = buffer[..32].try_into().unwrap();
-                    let response = UtpHeader::from_bytes(&response_bytes);
+                    let response = PortalHeader::from_bytes(&response_bytes);
                     
                     if response.verify_checksum() {
                         client_ops += 1;
@@ -302,7 +302,7 @@ pub async fn test_rust_rust_tcp() -> Result<TestResult> {
 
 /// 生成性能报告
 pub fn generate_performance_report(results: &[TestResult]) {
-    info!("📈 Universal Transport Protocol 跨语言性能测试报告");
+    info!("📈 Data Portal 跨语言性能测试报告");
     info!("================================================================");
     info!("通信组合              | 传输模式   | 操作频率     | 吞吐量      | 延迟");
     info!("---------------------|-----------|-------------|------------|--------");
@@ -345,7 +345,7 @@ async fn main() -> Result<()> {
         .with_env_filter("info")
         .init();
     
-    info!("🎯 Universal Transport Protocol 跨语言性能测试");
+    info!("🎯 Data Portal 跨语言性能测试");
     info!("测试6组通信组合的双向通信性能");
     println!();
     

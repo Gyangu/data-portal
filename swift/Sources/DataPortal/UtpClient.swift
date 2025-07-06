@@ -1,6 +1,6 @@
 //
-//  UtpClient.swift
-//  Universal Transport Protocol
+//  PortalClient.swift
+//  Data Portal
 //
 //  高性能跨平台传输协议 Swift 客户端
 //
@@ -118,7 +118,7 @@ public struct UtpHeader {
 }
 
 /// UTP客户端错误类型
-public enum UtpClientError: Error {
+public enum PortalClientError: Error {
     case connectionFailed(String)
     case invalidResponse
     case checksumMismatch
@@ -128,7 +128,7 @@ public enum UtpClientError: Error {
 
 /// UTP客户端主类
 @available(macOS 12.0, iOS 15.0, *)
-public class UtpClient: ObservableObject {
+public class PortalClient: ObservableObject {
     private let serverAddress: String
     private let serverPort: Int
     private var isConnected = false
@@ -177,7 +177,7 @@ public class UtpClient: ObservableObject {
             
         } catch {
             connectionStatus = .error(error.localizedDescription)
-            throw UtpClientError.connectionFailed(error.localizedDescription)
+            throw PortalClientError.connectionFailed(error.localizedDescription)
         }
     }
     
@@ -199,18 +199,18 @@ public class UtpClient: ObservableObject {
             
         } catch {
             connectionStatus = .error(error.localizedDescription)
-            throw UtpClientError.connectionFailed(error.localizedDescription)
+            throw PortalClientError.connectionFailed(error.localizedDescription)
         }
         #else
         connectionStatus = .error("不支持的平台")
-        throw UtpClientError.sharedMemoryNotSupported
+        throw PortalClientError.sharedMemoryNotSupported
         #endif
     }
     
     /// 发送UTP消息
     public func sendMessage(_ data: Data, messageType: UInt8 = 1) async throws -> Data {
         guard isConnected else {
-            throw UtpClientError.connectionFailed("未连接到服务器")
+            throw PortalClientError.connectionFailed("未连接到服务器")
         }
         
         let sequence = UInt32(performanceStats.totalOperations)
@@ -246,7 +246,7 @@ public class UtpClient: ObservableObject {
     /// 性能基准测试
     public func performanceBenchmark(iterations: Int = 100_000) async throws -> BenchmarkResult {
         guard isConnected else {
-            throw UtpClientError.connectionFailed("未连接到服务器")
+            throw PortalClientError.connectionFailed("未连接到服务器")
         }
         
         print("🚀 开始UTP性能基准测试...")
@@ -324,10 +324,10 @@ public struct BenchmarkResult {
     public let throughputMBps: Double
     public let averageLatencyMicroseconds: Double
     public let totalBytesTransferred: UInt64
-    public let transportMode: UtpClient.TransportMode
+    public let transportMode: PortalClient.TransportMode
 }
 
-extension UtpClient.ConnectionStatus {
+extension PortalClient.ConnectionStatus {
     var isSharedMemory: Bool {
         if case .connected(let mode) = self {
             return mode == .sharedMemory

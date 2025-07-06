@@ -1,6 +1,6 @@
 //
 //  CrossLanguageTest.swift
-//  Universal Transport Protocol
+//  Data Portal
 //
 //  跨语言通信性能测试 - Swift端
 //
@@ -45,8 +45,8 @@ public class SwiftCrossLanguageTest {
         var totalBytes: UInt64 = 0
         
         // 创建两个客户端模拟双向通信
-        let client1 = UtpClient(serverAddress: "127.0.0.1", port: 9092)
-        let client2 = UtpClient(serverAddress: "127.0.0.1", port: 9092)
+        let client1 = PortalClient(serverAddress: "127.0.0.1", port: 9092)
+        let client2 = PortalClient(serverAddress: "127.0.0.1", port: 9092)
         
         do {
             try await client1.connectSharedMemory()
@@ -136,8 +136,8 @@ public class SwiftCrossLanguageTest {
         var totalBytes: UInt64 = 0
         
         // 创建两个客户端模拟双向通信
-        let client1 = UtpClient(serverAddress: "127.0.0.1", port: 9093)
-        let client2 = UtpClient(serverAddress: "127.0.0.1", port: 9093)
+        let client1 = PortalClient(serverAddress: "127.0.0.1", port: 9093)
+        let client2 = PortalClient(serverAddress: "127.0.0.1", port: 9093)
         
         do {
             try await client1.connectNetwork()
@@ -228,7 +228,7 @@ public class SwiftCrossLanguageTest {
         
         if rustServerRunning {
             // 连接到Rust服务器
-            let swiftClient = UtpClient(serverAddress: "127.0.0.1", port: 9090)
+            let swiftClient = PortalClient(serverAddress: "127.0.0.1", port: 9090)
             
             do {
                 try await swiftClient.connectSharedMemory()
@@ -289,7 +289,7 @@ public class SwiftCrossLanguageTest {
         
         if rustServerRunning {
             // 连接到Rust TCP服务器
-            let swiftClient = UtpClient(serverAddress: "127.0.0.1", port: 9090)
+            let swiftClient = PortalClient(serverAddress: "127.0.0.1", port: 9090)
             
             do {
                 try await swiftClient.connectNetwork()
@@ -340,7 +340,7 @@ public class SwiftCrossLanguageTest {
     
     /// 生成Swift端性能报告
     public static func generateSwiftPerformanceReport(_ results: [SwiftTestResult]) {
-        print("📈 Universal Transport Protocol Swift端测试报告")
+        print("📈 Data Portal Swift端测试报告")
         print("================================================================")
         print("通信组合              | 传输模式   | 操作频率     | 吞吐量      | 延迟")
         print("---------------------|-----------|-------------|------------|--------")
@@ -374,7 +374,7 @@ public class SwiftCrossLanguageTest {
     
     /// 运行所有Swift端测试
     public static func runAllSwiftTests() async {
-        print("🎯 Universal Transport Protocol Swift端跨语言性能测试")
+        print("🎯 Data Portal Swift端跨语言性能测试")
         print("测试Swift端的4组通信组合")
         print()
         

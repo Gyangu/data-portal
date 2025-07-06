@@ -1,12 +1,12 @@
 //
 //  main.swift
-//  Universal Transport Protocol Test Runner
+//  Data Portal Test Runner
 //
 //  Swift端性能测试运行器
 //
 
 import Foundation
-import UniversalTransport
+import DataPortal
 
 @main
 struct TestRunner {
