@@ -1,7 +1,7 @@
 //! Transport manager for coordinating different transport implementations
 
 use crate::{
-    Transport, UniversalTransport, NodeInfo, TransportStrategy, TransportType, 
+    Transport, DataPortalTransport, NodeInfo, TransportStrategy, TransportType, 
     TransportError, Result, StrategySelector, StrategyPreferences
 };
 use async_trait::async_trait;
@@ -329,7 +329,7 @@ impl TransportManager {
             TransportType::SharedMemory => vec!["macOS".to_string(), "Linux".to_string(), "Windows".to_string()],
             TransportType::SwiftNetwork => vec!["macOS".to_string(), "iOS".to_string(), "Linux".to_string()],
             TransportType::RustNetwork => vec!["macOS".to_string(), "Linux".to_string(), "Windows".to_string()],
-            TransportType::Universal => vec!["All".to_string()],
+            TransportType::DataPortal => vec!["All".to_string()],
         }
     }
     
@@ -338,7 +338,7 @@ impl TransportManager {
         match transport_type {
             TransportType::SharedMemory => crate::PerformanceTier::Extreme,
             TransportType::SwiftNetwork | TransportType::RustNetwork => crate::PerformanceTier::High,
-            TransportType::Universal => crate::PerformanceTier::Medium,
+            TransportType::DataPortal => crate::PerformanceTier::Medium,
         }
     }
     
@@ -348,7 +348,7 @@ impl TransportManager {
             TransportType::SharedMemory => "High-performance shared memory transport for local communication".to_string(),
             TransportType::SwiftNetwork => "Swift-optimized network protocol with MessagePack serialization".to_string(),
             TransportType::RustNetwork => "Rust-optimized network protocol with bincode serialization".to_string(),
-            TransportType::Universal => "Universal compatibility protocol using Protocol Buffers".to_string(),
+            TransportType::DataPortal => "Data Portal compatibility protocol using Protocol Buffers".to_string(),
         }
     }
     
@@ -380,9 +380,9 @@ impl TransportManager {
     }
 }
 
-/// Implement UniversalTransport trait for TransportManager
+/// Implement DataPortalTransport trait for TransportManager
 #[async_trait]
-impl UniversalTransport for TransportManager {
+impl DataPortalTransport for TransportManager {
     async fn send<T>(&self, data: &T, destination: &NodeInfo) -> Result<()>
     where
         T: Serialize + Send + Sync,

@@ -1,10 +1,10 @@
-# Universal Transport Protocol - Development Makefile
+# Data Portal Protocol - Development Makefile
 
 .PHONY: help build test clean fmt lint install-deps bench docs all
 
 # Default target
 help:
-	@echo "Universal Transport Protocol - Development Commands"
+	@echo "Data Portal Protocol - Development Commands"
 	@echo ""
 	@echo "Available targets:"
 	@echo "  build        - Build all components (Rust + Swift)"

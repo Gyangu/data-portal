@@ -232,7 +232,7 @@ async fn main() -> Result<()> {
         .with_target(false)
         .init();
     
-    println!("🦀 Universal Transport Rust Demo");
+    println!("🦀 Data Portal Rust Demo");
     println!("=================================");
     
     let processor = SimpleRustProcessor::new().await

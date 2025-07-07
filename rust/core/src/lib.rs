@@ -1,4 +1,4 @@
-//! Universal Transport Protocol - Core Module
+//! Data Portal Protocol - Core Module
 //! 
 //! This crate provides the core abstractions and smart transport selection
 //! for high-performance cross-platform communication.
@@ -20,7 +20,7 @@ pub use error::*;
 /// Re-export common types
 pub mod prelude {
     pub use crate::{
-        transport::{Transport, UniversalTransport},
+        transport::{Transport, DataPortalTransport},
         node::{NodeInfo, Language},
         manager::TransportManager,
         strategy::{TransportStrategy, StrategySelector},
@@ -30,7 +30,7 @@ pub mod prelude {
     pub use serde::{Deserialize, Serialize};
 }
 
-/// Current version of the Universal Transport Protocol
+/// Current version of the Data Portal Protocol
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Protocol magic number for identification

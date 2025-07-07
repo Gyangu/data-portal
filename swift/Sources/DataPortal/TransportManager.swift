@@ -74,8 +74,8 @@ public actor TransportManager {
         case .swiftOptimized:
             throw TransportError.transportNotAvailable(.swiftOptimized)
             
-        case .universal:
-            throw TransportError.transportNotAvailable(.universal)
+        case .dataPortal:
+            throw TransportError.transportNotAvailable(.dataPortal)
         }
         
         // Update connection registry
@@ -102,8 +102,8 @@ public actor TransportManager {
         case .swiftOptimized:
             throw TransportError.transportNotAvailable(.swiftOptimized)
             
-        case .universal:
-            throw TransportError.transportNotAvailable(.universal)
+        case .dataPortal:
+            throw TransportError.transportNotAvailable(.dataPortal)
         }
     }
     
@@ -182,11 +182,11 @@ public actor TransportManager {
         
         transports.append(
             TransportInfo(
-                transportType: .universal,
+                transportType: .dataPortal,
                 isAvailable: false,
                 supportedPlatforms: ["all"],
                 performanceTier: .compatibility,
-                description: "Universal compatibility protocol (not implemented)"
+                description: "Data Portal compatibility protocol (not implemented)"
             )
         )
         

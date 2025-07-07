@@ -1,18 +1,18 @@
-//! Universal Transport Protocol - Network Module
+//! Data Portal Protocol - Network Module
 //! 
 //! Network transport implementations for different protocols
 
 pub mod protocol;
 pub mod swift;
 pub mod rust_transport;
-pub mod universal;
+pub mod data_portal;
 
 pub use protocol::*;
 
 /// Re-export transport implementations
 pub use swift::SwiftNetworkTransport;
 pub use rust_transport::RustNetworkTransport;
-pub use universal::UniversalNetworkTransport;
+pub use data_portal::DataPortalNetworkTransport;
 
 /// Network transport configuration
 #[derive(Debug, Clone)]

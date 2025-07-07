@@ -1,4 +1,4 @@
-//! Universal Transport Protocol - Shared Memory Module
+//! Data Portal Protocol - Shared Memory Module
 //! 
 //! High-performance cross-platform shared memory transport implementation
 

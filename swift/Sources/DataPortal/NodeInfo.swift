@@ -136,7 +136,7 @@ public struct NodeCapabilities: Codable, Hashable {
     public let protocolVersion: String
     
     public init(
-        supportedTransports: [TransportType] = [.universal],
+        supportedTransports: [TransportType] = [.dataPortal],
         maxMessageSize: Int = 64 * 1024 * 1024, // 64MB
         supportsCompression: Bool = false,
         supportsEncryption: Bool = false,
@@ -158,8 +158,8 @@ public enum TransportType: String, Codable, CaseIterable {
     case swiftNetwork = "swift_network"
     /// Rust-optimized network protocol
     case rustNetwork = "rust_network"
-    /// Universal compatibility protocol
-    case universal = "universal"
+    /// Data Portal compatibility protocol
+    case dataPortal = "data-portal"
 }
 
 /// Transport information

@@ -31,7 +31,7 @@ pub enum MessageType {
 /// Network protocol magic numbers
 pub const SWIFT_PROTOCOL_MAGIC: u32 = 0x53574654; // "SWFT"
 pub const RUST_PROTOCOL_MAGIC: u32 = 0x52555354;  // "RUST"
-pub const UNIVERSAL_PROTOCOL_MAGIC: u32 = 0x554E4956; // "UNIV"
+pub const DATA_PORTAL_PROTOCOL_MAGIC: u32 = 0x44505442; // "DPTB"
 
 /// Protocol version
 pub const PROTOCOL_VERSION: u8 = 1;

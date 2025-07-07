@@ -384,7 +384,7 @@ async fn main() -> Result<()> {
         .with_target(false)
         .init();
     
-    println!("🦀 Universal Transport Rust Service");
+    println!("🦀 Data Portal Rust Service");
     println!("===================================");
     
     let mut processor = RustDataProcessor::new().await

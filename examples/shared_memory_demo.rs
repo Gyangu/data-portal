@@ -95,7 +95,7 @@ impl SharedMemoryDemo {
     }
     
     async fn test_basic_communication(&self, target: &NodeInfo) -> anyhow::Result<()> {
-        let test_data = b"Hello, Universal Transport!".to_vec();
+        let test_data = b"Hello, Data Portal!".to_vec();
         let message = TestMessage::new(1, "Basic test message", test_data.clone());
         
         info!("Sending basic test message...");
@@ -263,7 +263,7 @@ async fn main() -> anyhow::Result<()> {
         .with_max_level(tracing::Level::INFO)
         .init();
     
-    info!("Universal Transport Protocol - Shared Memory Demo");
+    info!("Data Portal Protocol - Shared Memory Demo");
     info!("================================================");
     
     let demo = SharedMemoryDemo::new();

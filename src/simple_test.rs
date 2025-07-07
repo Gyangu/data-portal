@@ -1,4 +1,4 @@
-//! Simple Performance Test for Universal Transport Protocol
+//! Simple Performance Test for Data Portal Protocol
 //! 
 //! This test measures actual performance of different communication methods
 //! to provide real benchmark data instead of theoretical estimates.
@@ -221,7 +221,7 @@ async fn test_file_communication(message_count: usize, message_size: usize) -> P
 }
 
 pub async fn run_performance_comparison() -> Result<(), Box<dyn std::error::Error>> {
-    println!("🚀 Universal Transport Protocol - Performance Comparison");
+    println!("🚀 Data Portal Protocol - Performance Comparison");
     println!("========================================================");
     println!("This test compares different communication methods to establish");
     println!("realistic performance baselines and improvements.");
@@ -274,7 +274,7 @@ pub async fn run_performance_comparison() -> Result<(), Box<dyn std::error::Erro
     println!("• File I/O shows real-world storage-based communication costs");
     println!("• Shared memory should perform between Channel and Memory levels");
     println!();
-    println!("🎯 Expected Universal Transport Performance:");
+    println!("🎯 Expected Data Portal Performance:");
     println!("• Shared Memory: 50-200 MB/s (between Channel and Memory)");
     println!("• Network: 10-100 MB/s (depending on network conditions)");
     println!("• Cross-language: 20-150 MB/s (with serialization overhead)");

@@ -91,7 +91,7 @@ impl Default for NodeCapabilities {
     fn default() -> Self {
         Self {
             supported_transports: vec![
-                crate::TransportType::Universal,
+                crate::TransportType::DataPortal,
             ],
             max_message_size: 64 * 1024 * 1024, // 64MB
             supports_compression: false,

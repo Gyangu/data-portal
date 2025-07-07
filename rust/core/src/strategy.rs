@@ -207,7 +207,7 @@ impl StrategySelector {
                 }
             }
         } else {
-            // Use universal protocol
+            // Use data portal protocol
             Ok(TransportStrategy::DataPortal { endpoint: endpoint.clone() })
         }
     }
@@ -300,7 +300,7 @@ impl StrategySelector {
                 }
             }
             
-            // Always include universal as fallback
+            // Always include data portal as fallback
             transports.push(TransportType::DataPortal);
         }
         

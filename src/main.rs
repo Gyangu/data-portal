@@ -1,4 +1,4 @@
-//! Universal Transport Protocol - Performance Analysis
+//! Data Portal Protocol - Performance Analysis
 //! 
 //! This program provides realistic performance measurements for different
 //! communication methods to establish accurate benchmarks.

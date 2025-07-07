@@ -334,7 +334,7 @@ mod tests {
         let adapter = SharedMemoryTransportAdapter::new_default();
         let node = create_test_node("send_receive_test");
         
-        let test_data = b"Hello, Universal Transport!";
+        let test_data = b"Hello, Data Portal!";
         
         // Send data
         adapter.send(test_data, &node).await.unwrap();

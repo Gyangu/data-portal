@@ -170,11 +170,11 @@ public actor PerformanceMonitor {
         // 3. Consider data size and language
         if dataSize > 1024 * 1024 { // > 1MB
             // Large data - prefer high-throughput transports
-            return node.language == .swift ? .swiftOptimized : .universal
+            return node.language == .swift ? .swiftOptimized : .dataPortal
         }
         
         // 4. Default based on language
-        return node.language == .swift ? .swiftOptimized : .universal
+        return node.language == .swift ? .swiftOptimized : .dataPortal
     }
     
     // MARK: - Private Helpers

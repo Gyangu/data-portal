@@ -34,16 +34,16 @@ public actor NetworkTransportManager {
         throw NetworkTransportError.notImplemented("Swift-optimized transport")
     }
     
-    public func sendUniversal<T: Codable>(_ data: T, to destination: NodeInfo) async throws {
-        // TODO: Implement universal network transport
-        logger.debug("Universal send to \(destination.id) - NOT IMPLEMENTED")
-        throw NetworkTransportError.notImplemented("Universal transport")
+    public func sendDataPortal<T: Codable>(_ data: T, to destination: NodeInfo) async throws {
+        // TODO: Implement data portal network transport
+        logger.debug("Data Portal send to \(destination.id) - NOT IMPLEMENTED")
+        throw NetworkTransportError.notImplemented("Data Portal transport")
     }
     
-    public func receiveUniversal<T: Codable>(_ type: T.Type, from source: NodeInfo, timeout: TimeInterval) async throws -> T {
-        // TODO: Implement universal network transport
-        logger.debug("Universal receive from \(source.id) - NOT IMPLEMENTED")
-        throw NetworkTransportError.notImplemented("Universal transport")
+    public func receiveDataPortal<T: Codable>(_ type: T.Type, from source: NodeInfo, timeout: TimeInterval) async throws -> T {
+        // TODO: Implement data portal network transport
+        logger.debug("Data Portal receive from \(source.id) - NOT IMPLEMENTED")
+        throw NetworkTransportError.notImplemented("Data Portal transport")
     }
     
     // MARK: - Utility Methods
@@ -64,11 +64,11 @@ public actor NetworkTransportManager {
                 description: "Swift-optimized network protocol (not implemented)"
             ),
             TransportInfo(
-                transportType: "universal",
+                transportType: "data-portal",
                 isAvailable: false, // Not implemented yet
                 supportedPlatforms: ["all"],
                 performanceTier: "compatibility",
-                description: "Universal compatibility protocol (not implemented)"
+                description: "Data Portal compatibility protocol (not implemented)"
             )
         ]
     }

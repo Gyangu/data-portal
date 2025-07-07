@@ -58,7 +58,7 @@ public actor DataPortal {
         } catch {
             let duration = Date().timeIntervalSince(startTime)
             await performanceMonitor.recordSend(
-                strategy: .universal,
+                strategy: .dataPortal,
                 dataSize: MemoryLayout<T>.size,
                 duration: duration,
                 success: false
@@ -95,7 +95,7 @@ public actor DataPortal {
         } catch {
             let duration = Date().timeIntervalSince(startTime)
             await performanceMonitor.recordReceive(
-                strategy: .universal,
+                strategy: .dataPortal,
                 dataSize: MemoryLayout<T>.size,
                 duration: duration,
                 success: false
@@ -152,7 +152,7 @@ public actor DataPortal {
             if destination.language == .swift {
                 return .swiftOptimized
             } else {
-                return .universal // Cross-language for large data
+                return .dataPortal // Cross-language for large data
             }
         }
         
@@ -166,7 +166,7 @@ public actor DataPortal {
         case .swift:
             return .swiftOptimized
         case .rust:
-            return .universal // Cross-language
+            return .dataPortal // Cross-language
         }
     }
     
@@ -194,7 +194,7 @@ public actor DataPortal {
 public enum TransportStrategy: Hashable, CustomStringConvertible {
     case sharedMemory(region: String)
     case swiftOptimized
-    case universal
+    case dataPortal
     
     public var description: String {
         switch self {
@@ -202,8 +202,8 @@ public enum TransportStrategy: Hashable, CustomStringConvertible {
             return "SharedMemory(\(region))"
         case .swiftOptimized:
             return "SwiftOptimized"
-        case .universal:
-            return "Universal"
+        case .dataPortal:
+            return "DataPortal"
         }
     }
 }
