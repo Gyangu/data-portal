@@ -1,13 +1,13 @@
 //
 //  InteroperabilityTests.swift
-//  Universal Transport Tests
+//  Data Portal Tests
 //
 //  Swift-Rust interoperability tests
 //
 
 import XCTest
-@testable import UniversalTransport
-@testable import UniversalTransportSharedMemory
+@testable import DataPortal
+@testable import DataPortalSharedMemory
 import Foundation
 
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, visionOS 1.0, *)
@@ -136,7 +136,7 @@ final class InteroperabilityTests: XCTestCase {
         XCTAssertTrue(regions.contains(regionName), "Region should be in the list")
     }
     
-    func testUniversalTransportInitialization() async throws {
+    func testDataPortalInitialization() async throws {
         let config = TransportConfiguration(
             enableSharedMemory: true,
             enableSwiftOptimization: true,
@@ -147,7 +147,7 @@ final class InteroperabilityTests: XCTestCase {
             performanceMonitoringEnabled: true
         )
         
-        let transport = try await UniversalTransport(configuration: config)
+        let transport = try await DataPortal(configuration: config)
         
         // Test available transports
         let availableTransports = await transport.availableTransports()
@@ -295,7 +295,7 @@ final class InteroperabilityTests: XCTestCase {
     
     func testFullIntegrationScenario() async throws {
         let config = TransportConfiguration.default
-        let transport = try await UniversalTransport(configuration: config)
+        let transport = try await DataPortal(configuration: config)
         
         // Create Swift and Rust node representations
         let swiftNode = NodeInfo.local(id: "swift-integration-test", language: .swift)

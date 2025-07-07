@@ -7,7 +7,7 @@
 
 import Foundation
 import Logging
-import UniversalTransportSharedMemory
+import DataPortalSharedMemory
 
 // MARK: - Binary Benchmark Results
 

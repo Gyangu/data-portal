@@ -1,21 +1,21 @@
 //
-//  UniversalTransportTests.swift
-//  Universal Transport Tests
+//  DataPortalTests.swift
+//  Data Portal Tests
 //
-//  Unit tests for Universal Transport Protocol
+//  Unit tests for Data Portal Protocol
 //
 
 import XCTest
-@testable import UniversalTransport
-@testable import UniversalTransportSharedMemory
-@testable import UniversalTransportNetwork
+@testable import DataPortal
+@testable import DataPortalSharedMemory
+@testable import DataPortalNetwork
 
-final class UniversalTransportTests: XCTestCase {
+final class DataPortalTests: XCTestCase {
     
     func testBasicFunctionality() {
         // Basic test to ensure the module compiles and loads
-        XCTAssertNotNil(UniversalTransportSharedMemoryVersion.string)
-        XCTAssertEqual(UniversalTransportSharedMemoryVersion.major, 0)
+        XCTAssertNotNil(DataPortalSharedMemoryVersion.string)
+        XCTAssertEqual(DataPortalSharedMemoryVersion.major, 0)
     }
     
     func testNodeInfoCreation() {

@@ -1,6 +1,6 @@
 //
 //  NodeInfo.swift
-//  Universal Transport Protocol
+//  Data Portal Protocol
 //
 //  Node information and discovery for Swift
 //

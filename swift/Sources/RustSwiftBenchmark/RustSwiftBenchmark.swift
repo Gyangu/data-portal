@@ -7,8 +7,8 @@
 
 import Foundation
 import Logging
-import UniversalTransport
-import UniversalTransportSharedMemory
+import DataPortal
+import DataPortalSharedMemory
 
 // MARK: - Cross-Language Message
 
@@ -184,7 +184,7 @@ public struct CrossLanguageBenchmarkResults {
 public class RustSwiftBenchmark {
     
     private let logger = Logger(label: "rust-swift-benchmark")
-    private let swiftTransport: UniversalTransport
+    private let swiftTransport: DataPortal
     private let rustNode: NodeInfo
     private let swiftNode: NodeInfo
     
@@ -202,7 +202,7 @@ public class RustSwiftBenchmark {
         )
         
         // Initialize Swift transport
-        self.swiftTransport = try await UniversalTransport(configuration: config)
+        self.swiftTransport = try await DataPortal(configuration: config)
         
         // Create node information
         self.swiftNode = NodeInfo.local(id: "swift-client", language: .swift)

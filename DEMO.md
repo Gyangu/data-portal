@@ -17,7 +17,7 @@ The Data Portal Protocol provides high-performance, cross-language communication
 
 #### Rust Components
 ```bash
-cd /Users/gy/librorum/universal-transport
+cd /Users/gy/librorum/data-portal
 cargo build --release
 ```
 
@@ -49,12 +49,12 @@ cd swift
 swift test
 
 # Run interactive example
-swift run UniversalTransportExample
+swift run DataPortalExample
 
 # Run specific modes
-swift run UniversalTransportExample listen    # Listen for messages
-swift run UniversalTransportExample send      # Send test message
-swift run UniversalTransportExample benchmark # Run benchmark
+swift run DataPortalExample listen    # Listen for messages
+swift run DataPortalExample send      # Send test message
+swift run DataPortalExample benchmark # Run benchmark
 ```
 
 ## Demo Scenarios
@@ -66,7 +66,7 @@ This demonstrates the performance advantages of shared memory communication.
 #### Terminal 1 (Swift Processor)
 ```bash
 cd swift
-swift run UniversalTransportExample listen
+swift run DataPortalExample listen
 ```
 
 #### Terminal 2 (Rust Client)
@@ -86,7 +86,7 @@ This shows Swift and Rust processes communicating via shared memory.
 #### Terminal 1 (Swift Service)
 ```bash
 cd swift
-swift run UniversalTransportExample
+swift run DataPortalExample
 # Choose option 2: "Send request to Rust (if running)"
 ```
 
@@ -107,7 +107,7 @@ Compare different transport strategies and data sizes.
 #### Run Swift Benchmark
 ```bash
 cd swift
-swift run UniversalTransportExample benchmark
+swift run DataPortalExample benchmark
 ```
 
 #### Run Rust Benchmark
@@ -171,7 +171,7 @@ if destination.isLocalMachine {
 } else if destination.language == .swift {
     return .swiftOptimized
 } else {
-    return .universal
+    return .dataPortal
 }
 ```
 
@@ -223,7 +223,7 @@ Enable detailed logging:
 RUST_LOG=debug cargo run --example simple_rust_demo
 
 # Swift (modify source to increase log level)
-swift run UniversalTransportExample
+swift run DataPortalExample
 ```
 
 ## Advanced Features
@@ -294,6 +294,6 @@ let config = TransportConfiguration(
 
 See the generated documentation:
 - [Swift API Docs](swift/.build/docs/)
-- [Rust API Docs](target/doc/universal_transport/)
+- [Rust API Docs](target/doc/data_portal/)
 
 For more information, see the [Architecture Guide](ARCHITECTURE.md) and [Performance Analysis](PERFORMANCE.md).

@@ -1,4 +1,4 @@
-//! Error types for Universal Transport Protocol
+//! Error types for Data Portal Protocol
 
 use thiserror::Error;
 

@@ -28,8 +28,8 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 1. Fork and clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/universal-transport.git
-   cd universal-transport
+   git clone https://github.com/YOUR_USERNAME/data-portal.git
+   cd data-portal
    ```
 
 2. Install development dependencies:
@@ -121,7 +121,7 @@ Example:
 /// # Examples
 /// 
 /// ```rust
-/// let transport = UniversalTransport::new().await?;
+/// let transport = DataPortal::new().await?;
 /// transport.send(&data, &destination).await?;
 /// ```
 /// 
@@ -264,4 +264,4 @@ Contributors will be recognized in:
 - Release notes for significant contributions
 - Project documentation
 
-Thank you for contributing to Universal Transport Protocol!
+Thank you for contributing to Data Portal Protocol!

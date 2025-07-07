@@ -1,4 +1,4 @@
-# Universal Transport Protocol 性能测试结果
+# Data Portal Protocol 性能测试结果
 
 ## 测试环境
 - **平台**: macOS Darwin 24.4.0
@@ -158,7 +158,7 @@ withUnsafeBytes(of: flags.littleEndian) { data.append(contentsOf: $0) }
 
 ## 理论性能上限
 
-基于实际测试，我们的Universal Transport Protocol达到了：
+基于实际测试，我们的Data Portal Protocol达到了：
 
 ### 峰值性能 (内存通信)
 - **最高吞吐量**: 73.9 GB/s（零拷贝，16MB消息）
@@ -177,7 +177,7 @@ withUnsafeBytes(of: flags.littleEndian) { data.append(contentsOf: $0) }
 
 ## 结论
 
-Universal Transport Protocol成功实现了用户要求的：
+Data Portal Protocol成功实现了用户要求的：
 
 1. ✅ **完全移除JSON序列化** - 使用固定位数二进制协议
 2. ✅ **类TCP设计** - 32字节固定头部，高效二进制格式
@@ -228,7 +228,7 @@ Universal Transport Protocol成功实现了用户要求的：
 
 ### 总结
 
-Universal Transport Protocol在Swift端成功实现了：
+Data Portal Protocol在Swift端成功实现了：
 - **完整的二进制协议支持**
 - **优异的本地数据处理性能** 
 - **与Rust端完全兼容的协议格式**

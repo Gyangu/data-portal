@@ -1,6 +1,6 @@
 //
 //  SharedMemoryTransport.swift
-//  Universal Transport Shared Memory
+//  Data Portal Shared Memory
 //
 //  High-performance shared memory transport implementation
 //

@@ -70,8 +70,8 @@ pub enum TransportStrategy {
     SwiftNetwork { endpoint: String },
     /// Rust-optimized network
     RustNetwork { endpoint: String },
-    /// Universal compatibility protocol
-    Universal { endpoint: String },
+    /// DataPortal compatibility protocol
+    DataPortal { endpoint: String },
 }
 
 impl StrategySelector {
@@ -180,9 +180,9 @@ impl StrategySelector {
                     TransportStrategy::RustNetwork { endpoint: endpoint.clone() }
                 })
             }
-            TransportType::Universal => {
+            TransportType::DataPortal => {
                 destination.endpoint.as_ref().map(|endpoint| {
-                    TransportStrategy::Universal { endpoint: endpoint.clone() }
+                    TransportStrategy::DataPortal { endpoint: endpoint.clone() }
                 })
             }
         }
@@ -208,7 +208,7 @@ impl StrategySelector {
             }
         } else {
             // Use universal protocol
-            Ok(TransportStrategy::Universal { endpoint: endpoint.clone() })
+            Ok(TransportStrategy::DataPortal { endpoint: endpoint.clone() })
         }
     }
     
@@ -301,7 +301,7 @@ impl StrategySelector {
             }
             
             // Always include universal as fallback
-            transports.push(TransportType::Universal);
+            transports.push(TransportType::DataPortal);
         }
         
         transports
@@ -315,7 +315,7 @@ impl TransportStrategy {
             TransportStrategy::SharedMemory { .. } => TransportType::SharedMemory,
             TransportStrategy::SwiftNetwork { .. } => TransportType::SwiftNetwork,
             TransportStrategy::RustNetwork { .. } => TransportType::RustNetwork,
-            TransportStrategy::Universal { .. } => TransportType::Universal,
+            TransportStrategy::DataPortal { .. } => TransportType::DataPortal,
         }
     }
     
@@ -325,7 +325,7 @@ impl TransportStrategy {
             TransportStrategy::SharedMemory { .. } => None,
             TransportStrategy::SwiftNetwork { endpoint } => Some(endpoint),
             TransportStrategy::RustNetwork { endpoint } => Some(endpoint),
-            TransportStrategy::Universal { endpoint } => Some(endpoint),
+            TransportStrategy::DataPortal { endpoint } => Some(endpoint),
         }
     }
     
@@ -349,8 +349,8 @@ impl TransportStrategy {
                 // Optimized protocols are good for medium to large data
                 data_size >= 256 // 256 bytes
             }
-            TransportStrategy::Universal { .. } => {
-                // Universal protocol works for all sizes
+            TransportStrategy::DataPortal { .. } => {
+                // DataPortal protocol works for all sizes
                 true
             }
         }
@@ -404,7 +404,7 @@ mod tests {
         let mut selector = StrategySelector::new_default();
         
         selector.update_performance("node1", TransportType::SharedMemory, 1.0, 500.0, true);
-        selector.update_performance("node1", TransportType::Universal, 50.0, 10.0, true);
+        selector.update_performance("node1", TransportType::DataPortal, 50.0, 10.0, true);
         
         let history = selector.get_performance_history("node1").unwrap();
         assert_eq!(history.metrics.len(), 2);

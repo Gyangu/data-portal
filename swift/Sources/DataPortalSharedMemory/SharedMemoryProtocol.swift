@@ -1,6 +1,6 @@
 //
 //  SharedMemoryProtocol.swift
-//  Universal Transport Shared Memory
+//  Data Portal Shared Memory
 //
 //  Cross-platform shared memory protocol for Swift-Rust interoperability
 //

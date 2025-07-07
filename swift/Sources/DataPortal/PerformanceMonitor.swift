@@ -1,6 +1,6 @@
 //
 //  PerformanceMonitor.swift
-//  Universal Transport Protocol
+//  Data Portal Protocol
 //
 //  Performance monitoring and optimization
 //

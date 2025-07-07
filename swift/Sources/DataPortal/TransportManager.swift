@@ -1,14 +1,14 @@
 //
 //  TransportManager.swift
-//  Universal Transport Protocol
+//  Data Portal Protocol
 //
 //  Transport management and coordination
 //
 
 import Foundation
 import Logging
-import UniversalTransportSharedMemory
-// import UniversalTransportNetwork
+import DataPortalSharedMemory
+// import DataPortalNetwork
 
 /// Main transport manager coordinating all transport types
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, visionOS 1.0, *)

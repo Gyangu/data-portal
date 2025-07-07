@@ -1,13 +1,13 @@
 //
 //  main.swift
-//  Universal Transport Example
+//  Data Portal Example
 //
 //  Swift-Rust interoperability demonstration
 //
 
 import Foundation
-import UniversalTransport
-import UniversalTransportSharedMemory
+import DataPortal
+import DataPortalSharedMemory
 import Logging
 
 // MARK: - Example Data Structures
@@ -52,7 +52,7 @@ struct DataProcessingResponse: Codable {
 
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, visionOS 1.0, *)
 actor SwiftDataProcessor {
-    private let transport: UniversalTransport
+    private let transport: DataPortal
     private let logger = Logger(label: "swift-processor")
     
     init() async throws {
@@ -67,7 +67,7 @@ actor SwiftDataProcessor {
             performanceMonitoringEnabled: true
         )
         
-        self.transport = try await UniversalTransport(configuration: config)
+        self.transport = try await DataPortal(configuration: config)
         logger.info("Swift data processor initialized")
     }
     
@@ -194,9 +194,9 @@ actor SwiftDataProcessor {
 
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, visionOS 1.0, *)
 @main
-struct UniversalTransportExample {
+struct DataPortalExample {
     static func main() async {
-        print("🚀 Universal Transport Swift-Rust Interoperability Example")
+        print("🚀 Data Portal Swift-Rust Interoperability Example")
         print("============================================================")
         
         let logger = Logger(label: "example-main")

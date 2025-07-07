@@ -1,6 +1,6 @@
 //
 //  SharedMemoryRegion.swift
-//  Universal Transport Shared Memory
+//  Data Portal Shared Memory
 //
 //  Cross-platform shared memory region management for Swift
 //

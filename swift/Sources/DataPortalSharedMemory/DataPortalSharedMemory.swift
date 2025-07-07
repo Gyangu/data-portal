@@ -22,7 +22,7 @@ public typealias SharedMemoryConfigurationType = SharedMemoryConfiguration
 // MARK: - Module Information
 
 /// Module version information
-public enum UniversalTransportSharedMemoryVersion {
+public enum DataPortalSharedMemoryVersion {
     public static let major = 0
     public static let minor = 1
     public static let patch = 0
@@ -41,7 +41,7 @@ public struct ModuleCapabilities {
     
     public static var summary: String {
         return """
-        Universal Transport Shared Memory v\(UniversalTransportSharedMemoryVersion.string)
+        Data Portal Shared Memory v\(DataPortalSharedMemoryVersion.string)
         - POSIX Shared Memory: \(supportsPOSIXSharedMemory ? "✓" : "✗")
         - Ring Buffers: \(supportsRingBuffers ? "✓" : "✗")
         - Cross-Language Serialization: \(supportsCrossLanguageSerialization ? "✓" : "✗")

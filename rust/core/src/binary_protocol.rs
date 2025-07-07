@@ -1,4 +1,4 @@
-//! High-Performance Binary Protocol for Universal Transport
+//! High-Performance Binary Protocol for Data Portal
 //! 
 //! TCP-like fixed-length binary protocol for maximum performance
 //! No JSON overhead - direct memory serialization
@@ -7,8 +7,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use bytes::{Bytes, BytesMut, BufMut, Buf};
 use crc32fast;
 
-/// Protocol magic number (4 bytes) - "UTPB" (Universal Transport Protocol Binary)
-pub const PROTOCOL_MAGIC: u32 = 0x55545042;
+/// Protocol magic number (4 bytes) - "DPTB" (Data Portal Transport Binary)
+pub const PROTOCOL_MAGIC: u32 = 0x44505442;
 
 /// Protocol version (1 byte)
 pub const PROTOCOL_VERSION: u8 = 1;

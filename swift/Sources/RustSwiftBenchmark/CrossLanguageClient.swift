@@ -8,7 +8,7 @@
 import Foundation
 import Network
 import Logging
-import UniversalTransportSharedMemory
+import DataPortalSharedMemory
 
 // MARK: - Client Configuration
 

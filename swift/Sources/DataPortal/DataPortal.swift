@@ -26,7 +26,7 @@ public actor DataPortal {
         self.transportManager = try await TransportManager(configuration: configuration)
         self.performanceMonitor = PerformanceMonitor()
         
-        logger.info("Universal Transport initialized with configuration: \(configuration)")
+        logger.info("Data Portal initialized with configuration: \(configuration)")
     }
     
     // MARK: - High-Level Interface

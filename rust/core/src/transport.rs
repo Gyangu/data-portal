@@ -24,9 +24,9 @@ pub trait Transport: Send + Sync {
     async fn get_metrics(&self) -> TransportMetrics;
 }
 
-/// High-level universal transport interface
+/// High-level data portal transport interface
 #[async_trait]
-pub trait UniversalTransport: Send + Sync {
+pub trait DataPortalTransport: Send + Sync {
     /// Send structured data to a destination
     async fn send<T>(&self, data: &T, destination: &NodeInfo) -> Result<()>
     where
@@ -55,8 +55,8 @@ pub enum TransportType {
     SwiftNetwork,
     /// Rust-optimized network protocol
     RustNetwork,
-    /// Universal compatibility protocol
-    Universal,
+    /// Data portal compatibility protocol
+    DataPortal,
 }
 
 /// Transport performance metrics
