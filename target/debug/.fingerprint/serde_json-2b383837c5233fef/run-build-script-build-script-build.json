@@ -1,0 +1,1 @@
+{"rustc":5357548097637079788,"features":"","declared_features":"","target":0,"profile":0,"path":0,"deps":[[15367738274754116744,"build_script_build",false,3547853384850189208]],"local":[{"RerunIfChanged":{"output":"debug/build/serde_json-2b383837c5233fef/output","paths":["build.rs"]}}],"rustflags":["--cfg","tokio_allow_from_blocking_fd"],"config":0,"compile_kind":0}
