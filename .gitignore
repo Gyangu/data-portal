@@ -1,0 +1,35 @@
+# Rust
+target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+
+# Test files - POSIX legacy files
+posix_*
+rust_posix_*
+swift_posix_*
+POSIX_*
+
+# Build artifacts
+build/
+.build/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Examples output
+examples/output/
