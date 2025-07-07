@@ -1,10 +1,10 @@
-# Universal Transport Protocol - Demo Guide
+# Data Portal Protocol - Demo Guide
 
-This guide demonstrates the Swift-Rust interoperability features of the Universal Transport Protocol.
+This guide demonstrates the Swift-Rust interoperability features of the Data Portal Protocol.
 
 ## Overview
 
-The Universal Transport Protocol provides high-performance, cross-language communication with intelligent transport selection:
+The Data Portal Protocol provides high-performance, cross-language communication with intelligent transport selection:
 
 - **Same Machine Communication**: Shared memory with 100-800x performance improvement
 - **Cross-Language Support**: Swift ↔ Rust with MessagePack serialization

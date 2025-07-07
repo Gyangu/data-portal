@@ -1,10 +1,10 @@
-//! Universal Transport Protocol - Shared Memory Demo
+//! Data Portal Protocol - Shared Memory Demo
 //! 
 //! This example demonstrates high-performance shared memory communication
-//! using the Universal Transport Protocol with automatic transport selection.
+//! using the Data Portal Protocol with automatic transport selection.
 
-use universal_transport_core::prelude::*;
-use universal_transport_shared_memory::{SharedMemoryTransportAdapter, SharedMemoryConfig};
+use data_portal_core::prelude::*;
+use data_portal_shared_memory::{SharedMemoryTransportAdapter, SharedMemoryConfig};
 use bytes::Bytes;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;

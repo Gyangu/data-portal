@@ -3,7 +3,7 @@
 //! High-performance benchmark using TCP-like fixed binary protocol
 //! instead of JSON serialization
 
-use universal_transport_core::binary_protocol::*;
+use data_portal_core::binary_protocol::*;
 use std::time::{Duration, Instant};
 use bytes::Bytes;
 

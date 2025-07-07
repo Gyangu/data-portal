@@ -1,10 +1,10 @@
 //! Rust ↔ Rust Performance Benchmark
 //! 
-//! This benchmark tests the actual performance of Universal Transport Protocol
+//! This benchmark tests the actual performance of Data Portal Protocol
 //! for same-language communication using shared memory.
 
-use universal_transport_core::prelude::*;
-use universal_transport_shared_memory::{SharedMemoryTransportAdapter, SharedMemoryConfig};
+use data_portal_core::prelude::*;
+use data_portal_shared_memory::{SharedMemoryTransportAdapter, SharedMemoryConfig};
 use bincode;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;

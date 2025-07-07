@@ -1,4 +1,4 @@
-//! Simple Rust demonstration for Universal Transport Protocol
+//! Simple Rust demonstration for Data Portal Protocol
 //!
 //! This example shows basic shared memory operations and compatibility
 //! with the Swift implementation.
@@ -7,10 +7,10 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 use tracing::{info, warn};
-use universal_transport_shared_memory::{
+use data_portal_shared_memory:{
     SharedMemoryTransport, SharedMemoryConfig, SharedMemoryRegion, Message
 };
-use universal_transport_core::NodeInfo;
+use data_portal_core::NodeInfo;
 
 // MARK: - Simple Data Structures
 

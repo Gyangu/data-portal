@@ -31,8 +31,8 @@ tokio-util = { version = "0.7", features = ["codec"] }
 tokio-test = "0.4"
 
 [features]
-default = ["rust-protocol", "swift-protocol", "universal-protocol"]
+default = ["rust-protocol", "swift-protocol", "data-portal-protocol"]
 rust-protocol = []
 swift-protocol = []
-universal-protocol = []
+data-portal-protocol = []
 compression = []

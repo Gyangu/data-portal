@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "UniversalTransport",
+    name: "DataPortal",
     platforms: [
         .macOS(.v14),
         .iOS(.v17),
@@ -15,16 +15,16 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "UniversalTransport",
-            targets: ["UniversalTransport"]
+            name: "DataPortal",
+            targets: ["DataPortal"]
         ),
         .library(
-            name: "UniversalTransportSharedMemory", 
-            targets: ["UniversalTransportSharedMemory"]
+            name: "DataPortalSharedMemory", 
+            targets: ["DataPortalSharedMemory"]
         ),
         .library(
-            name: "UniversalTransportNetwork",
-            targets: ["UniversalTransportNetwork"]
+            name: "DataPortalNetwork",
+            targets: ["DataPortalNetwork"]
         ),
     ],
     dependencies: [
@@ -38,22 +38,22 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "UniversalTransport",
+            name: "DataPortal",
             dependencies: [
-                "UniversalTransportSharedMemory",
-                "UniversalTransportNetwork",
+                "DataPortalSharedMemory",
+                "DataPortalNetwork",
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Metrics", package: "swift-metrics"),
             ]
         ),
         .target(
-            name: "UniversalTransportSharedMemory",
+            name: "DataPortalSharedMemory",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),
         .target(
-            name: "UniversalTransportNetwork", 
+            name: "DataPortalNetwork", 
             dependencies: [
                 .product(name: "NIO", package: "swift-nio"),
                 .product(name: "MessagePack", package: "MessagePack"),
@@ -61,34 +61,34 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "UniversalTransportTests",
+            name: "DataPortalTests",
             dependencies: [
-                "UniversalTransport",
-                "UniversalTransportSharedMemory", 
-                "UniversalTransportNetwork",
+                "DataPortal",
+                "DataPortalSharedMemory", 
+                "DataPortalNetwork",
             ]
         ),
         .executableTarget(
-            name: "UniversalTransportExample",
+            name: "DataPortalExample",
             dependencies: [
-                "UniversalTransport",
-                "UniversalTransportSharedMemory",
+                "DataPortal",
+                "DataPortalSharedMemory",
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),
         .executableTarget(
             name: "SwiftSwiftBenchmark",
             dependencies: [
-                "UniversalTransport",
-                "UniversalTransportSharedMemory",
+                "DataPortal",
+                "DataPortalSharedMemory",
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),
         .executableTarget(
             name: "RustSwiftBenchmark",
             dependencies: [
-                "UniversalTransport",
-                "UniversalTransportSharedMemory",
+                "DataPortal",
+                "DataPortalSharedMemory",
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),

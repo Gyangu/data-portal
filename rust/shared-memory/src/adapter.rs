@@ -282,7 +282,7 @@ fn get_local_machine_id() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use universal_transport_core::Language;
+    use data_portal_core::Language;
     use tokio_test;
     
     fn create_test_node(id: &str) -> NodeInfo {
@@ -293,7 +293,7 @@ mod tests {
             endpoint: None,
             shared_memory_name: Some(format!("test_{}", id)),
             metadata: std::collections::HashMap::new(),
-            capabilities: universal_transport_core::NodeCapabilities::default(),
+            capabilities: data_portal_core::NodeCapabilities::default(),
         }
     }
     

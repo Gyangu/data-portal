@@ -1,6 +1,6 @@
 //
-//  UniversalTransportSharedMemory.swift
-//  Universal Transport Shared Memory
+//  DataPortalSharedMemory.swift
+//  Data Portal Shared Memory
 //
 //  Main module exports for shared memory transport
 //

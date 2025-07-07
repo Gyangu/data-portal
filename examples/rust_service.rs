@@ -1,15 +1,15 @@
 //! Rust service for Swift-Rust interoperability demonstration
 //!
 //! This example demonstrates high-performance communication between
-//! Swift and Rust using the Universal Transport Protocol.
+//! Swift and Rust using the Data Portal Protocol.
 
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::time::{Duration, Instant};
 use tokio::time::timeout;
 use tracing::{debug, error, info, warn};
-use universal_transport_core::{NodeInfo, Language, TransportManager, TransportStrategy};
-use universal_transport_shared_memory::{SharedMemoryTransport, SharedMemoryConfiguration};
+use data_portal_core::{NodeInfo, Language, TransportManager, TransportStrategy};
+use data_portal_shared_memory::{SharedMemoryTransport, SharedMemoryConfiguration};
 
 // MARK: - Data Structures (matching Swift)
 

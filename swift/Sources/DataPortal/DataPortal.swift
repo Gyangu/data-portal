@@ -1,22 +1,22 @@
 //
-//  UniversalTransport.swift
-//  Universal Transport Protocol
+//  DataPortal.swift
+//  Data Portal Protocol
 //
 //  High-performance cross-platform communication for Swift and Rust
 //
 
 import Foundation
 import Logging
-import UniversalTransportSharedMemory
-import UniversalTransportNetwork
+import DataPortalSharedMemory
+import DataPortalNetwork
 
-/// Universal Transport Protocol main interface
+/// Data Portal Protocol main interface
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, visionOS 1.0, *)
-public actor UniversalTransport {
+public actor DataPortal {
     
     // MARK: - Properties
     
-    private let logger = Logger(label: "universal-transport")
+    private let logger = Logger(label: "data-portal")
     private let transportManager: TransportManager
     private let performanceMonitor: PerformanceMonitor
     

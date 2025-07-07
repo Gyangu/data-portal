@@ -1,6 +1,6 @@
-# Contributing to Universal Transport Protocol
+# Contributing to Data Portal Protocol
 
-Thank you for your interest in contributing to Universal Transport Protocol! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Data Portal Protocol! This document provides guidelines and information for contributors.
 
 ## Table of Contents
 
