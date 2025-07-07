@@ -1,4 +1,4 @@
-# Universal Transport Protocol
+# Data Portal Protocol
 
 🚀 **极高性能跨语言通信协议** - 零拷贝二进制协议，支持Rust和Swift
 
@@ -66,7 +66,7 @@
 ### 二进制协议头部 (32字节固定)
 ```
 偏移  大小  字段         描述
-0-3   4    Magic        协议魔数 (0x55545042 "UTPB")
+0-3   4    Magic        协议魔数 (0x44505442 "DPTB")
 4     1    Version      协议版本 (1)
 5     1    MessageType  消息类型
 6-7   2    Flags        标志位
@@ -105,36 +105,41 @@ cargo run --example cross_language_server client
 ### Rust使用示例
 
 ```rust
-use zero_copy_protocol::{ZeroCopyMessage, ZeroCopyMessageRef};
+use data_portal_core::{Transport, TransportType};
 
-// 创建零拷贝消息
-let message = ZeroCopyMessage::new(1024, 42);
-let bytes = message.as_bytes();
+// 创建Data Portal传输
+let transport = NetworkTransport::new(config).await?;
 
-// 零拷贝解析
-if let Some(parsed) = ZeroCopyMessage::from_bytes(bytes) {
-    println!("Sequence: {}", parsed.sequence());
-}
+// 零拷贝数据传输
+let data = Bytes::from_static(b"Hello, Data Portal!");
+transport.send(&data, &destination).await?;
+
+// 接收数据
+let received = transport.receive(&source, 5000).await?;
+println!("Received: {:?}", received);
 ```
 
 ### Swift使用示例
 
 ```swift
-import UniversalTransportSharedMemory
+import DataPortalCore
 
-// 创建二进制消息
-let payload = Data(repeating: 0x42, count: 1024)
-let message = try BinaryMessage.benchmark(id: 42, data: payload)
+// 创建Data Portal客户端
+let client = DataPortalClient(endpoint: "127.0.0.1:50052")
 
-// 序列化和反序列化
-let bytes = message.toBytes()
-let parsed = try BinaryMessage.fromBytes(bytes)
+// 发送数据
+let data = Data("Hello, Data Portal!".utf8)
+try await client.send(data: data, to: endpoint)
+
+// 接收数据
+let received = try await client.receive(from: endpoint, timeout: 5.0)
+print("Received: \(String(data: received, encoding: .utf8) ?? "")")
 ```
 
 ## 📁 项目结构
 
 ```
-universal-transport/
+data-portal/
 ├── rust/
 │   ├── core/                   # 核心传输引擎
 │   ├── shared-memory/          # 共享内存实现
@@ -146,8 +151,8 @@ universal-transport/
 │       └── cross_language_server.rs     # 跨语言服务器
 ├── swift/
 │   └── Sources/
-│       ├── UniversalTransportSharedMemory/  # Swift二进制协议
-│       └── RustSwiftBenchmark/              # 跨语言测试
+│       ├── DataPortalSharedMemory/  # Swift二进制协议
+│       └── RustSwiftBenchmark/      # 跨语言测试
 └── PERFORMANCE_TEST_RESULTS.md             # 详细性能报告
 ```
 
@@ -180,7 +185,7 @@ universal-transport/
 ### 零拷贝技术
 ```rust
 #[repr(C)]
-pub struct ZeroCopyHeader {
+pub struct DataPortalHeader {
     pub magic: u32,
     pub version: u8,
     // ... 其他字段
@@ -188,7 +193,7 @@ pub struct ZeroCopyHeader {
 
 // 直接内存映射，无拷贝
 unsafe {
-    &*(buffer.as_ptr() as *const ZeroCopyHeader)
+    &*(buffer.as_ptr() as *const DataPortalHeader)
 }
 ```
 
